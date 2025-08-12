@@ -1,0 +1,280 @@
+# AI Assistant Configuration - Navya Sree Yellina Portfolio
+# This configuration file defines the LangGraph agent setup
+
+agent:
+  name: "NavyaAI Assistant"
+  model: "gpt-4-turbo-preview"
+  temperature: 0.7
+  max_tokens: 2000
+  system_prompt_file: "docs/PERSONAL_AI_INSTRUCTIONS.md"
+
+knowledge_base:
+  sources:
+    - type: "document"
+      path: "NavyaSreeYellina_Resume.pdf"
+      weight: 1.0
+      update_frequency: "monthly"
+    
+    - type: "structured_data"
+      path: ".claude/requirements/discovered/features.md"
+      weight: 0.8
+      update_frequency: "weekly"
+    
+    - type: "projects"
+      source: "sanity"
+      collection: "projects"
+      weight: 0.9
+      update_frequency: "on_change"
+    
+    - type: "publications"
+      source: "sanity"
+      collection: "publications"
+      weight: 0.8
+      update_frequency: "on_change"
+    
+    - type: "blog_posts"
+      source: "sanity"
+      collection: "blogPosts"
+      weight: 0.6
+      update_frequency: "on_change"
+
+embedding:
+  model: "text-embedding-3-small"
+  dimensions: 1536
+  chunk_size: 1000
+  chunk_overlap: 200
+
+vector_store:
+  provider: "supabase"
+  table: "ai_context_documents"
+  similarity_threshold: 0.7
+  max_results: 5
+
+conversation:
+  memory_type: "buffer_window"
+  window_size: 10
+  session_timeout: 1800  # 30 minutes
+  persistence: true
+
+response_generation:
+  strategies:
+    - name: "technical_inquiry"
+      triggers:
+        - "experience with"
+        - "skills in"
+        - "knowledge of"
+        - "worked with"
+      template: |
+        1. Acknowledge the technical area
+        2. Reference specific experience with metrics
+        3. Provide concrete project examples
+        4. Suggest relevant case studies
+        5. Offer further discussion via contact
+    
+    - name: "recruitment"
+      triggers:
+        - "hiring"
+        - "position"
+        - "opportunity"
+        - "role"
+      template: |
+        1. Confirm availability and interest
+        2. Highlight matching qualifications
+        3. Mention key achievements
+        4. Provide resume download
+        5. Encourage direct contact
+    
+    - name: "research"
+      triggers:
+        - "research"
+        - "publication"
+        - "thesis"
+        - "academic"
+      template: |
+        1. Reference academic work
+        2. Explain research focus
+        3. Mention publications
+        4. Suggest collaboration areas
+        5. Provide academic contact option
+    
+    - name: "project_specific"
+      triggers:
+        - "project"
+        - "case study"
+        - "implementation"
+        - "solution"
+      template: |
+        1. Identify relevant project
+        2. Explain problem and solution
+        3. Highlight results and metrics
+        4. Mention technologies used
+        5. Link to detailed case study
+
+personas:
+  - id: "recruiter"
+    indicators:
+      - "hire"
+      - "candidate"
+      - "resume"
+      - "interview"
+    focus:
+      - qualifications
+      - availability
+      - experience_metrics
+      - contact_urgency
+  
+  - id: "project_manager"
+    indicators:
+      - "consultant"
+      - "project"
+      - "deadline"
+      - "budget"
+    focus:
+      - deliverables
+      - timelines
+      - cost_efficiency
+      - proven_results
+  
+  - id: "researcher"
+    indicators:
+      - "paper"
+      - "research"
+      - "collaborate"
+      - "academic"
+    focus:
+      - publications
+      - methodology
+      - research_interests
+      - academic_credentials
+  
+  - id: "technical_peer"
+    indicators:
+      - "how did you"
+      - "architecture"
+      - "technical details"
+      - "implementation"
+    focus:
+      - technical_depth
+      - architecture_decisions
+      - lessons_learned
+      - best_practices
+
+quality_control:
+  fact_checking:
+    enabled: true
+    confidence_threshold: 0.8
+    fallback_response: "I don't have specific information about that in my knowledge base. Please contact Navya directly through the contact form for detailed discussion."
+  
+  hallucination_prevention:
+    strict_mode: true
+    require_source: true
+    cite_sources: false  # Keep responses clean
+  
+  response_validation:
+    max_length: 500  # words
+    min_length: 50   # words
+    profanity_filter: true
+    tone_check: "professional"
+
+analytics:
+  track_queries: true
+  track_satisfaction: true
+  track_conversions: true
+  track_topics: true
+  
+  metrics:
+    - query_categories
+    - response_time
+    - satisfaction_score
+    - conversion_rate
+    - popular_topics
+    - error_rate
+
+performance:
+  cache:
+    enabled: true
+    ttl: 3600  # 1 hour
+    max_size: 1000  # entries
+  
+  optimization:
+    preload_common_queries: true
+    edge_deployment: true
+    streaming_responses: true
+  
+  limits:
+    max_conversation_length: 50
+    max_query_length: 500
+    rate_limit_per_ip: 100  # per hour
+
+security:
+  input_sanitization: true
+  output_filtering: true
+  
+  blocked_patterns:
+    - personal_phone
+    - home_address
+    - ssn
+    - credit_card
+  
+  sensitive_topics:
+    - salary_specific_numbers
+    - personal_relationships
+    - health_information
+    - political_views
+
+monitoring:
+  error_reporting:
+    provider: "sentry"
+    level: "error"
+  
+  performance_tracking:
+    provider: "datadog"
+    custom_metrics:
+      - ai_response_time
+      - embedding_generation_time
+      - context_retrieval_time
+  
+  alerts:
+    - metric: "error_rate"
+      threshold: 0.05
+      action: "notify"
+    
+    - metric: "response_time_p95"
+      threshold: 3000  # ms
+      action: "notify"
+    
+    - metric: "satisfaction_score"
+      threshold: 0.7
+      action: "review"
+
+deployment:
+  environments:
+    development:
+      model: "gpt-3.5-turbo"
+      rate_limit: 10
+      cache_enabled: false
+    
+    staging:
+      model: "gpt-4"
+      rate_limit: 50
+      cache_enabled: true
+    
+    production:
+      model: "gpt-4-turbo-preview"
+      rate_limit: 100
+      cache_enabled: true
+
+maintenance:
+  retraining:
+    schedule: "weekly"
+    auto_trigger_on_content_change: true
+  
+  backup:
+    conversation_history: "daily"
+    vector_store: "daily"
+    configuration: "on_change"
+  
+  cleanup:
+    old_conversations: 90  # days
+    unused_embeddings: 180  # days
+    error_logs: 30  # days

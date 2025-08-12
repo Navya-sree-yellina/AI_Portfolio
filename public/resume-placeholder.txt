@@ -1,0 +1,6 @@
+This is a placeholder for the resume PDF.
+Please add your actual resume.pdf file to the public folder.
+
+The resume should be named: resume.pdf
+
+You can download it from your existing resume or create a new one.
