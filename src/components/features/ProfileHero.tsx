@@ -24,7 +24,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
   const defaultProfile = {
     fullName: "Navya Sree Yellina",
     title: "Generative AI Engineer | ML Architect | Innovation Catalyst",
-    bio: "🚀 Turning AI dreams into reality, one algorithm at a time. I don't just build AI systems—I craft intelligent experiences that understand, adapt, and amaze. From architecting RAG frameworks that boosted accuracy by 25% to reducing latency from a coffee break (2.1s) to a heartbeat (1.26s), I transform data into decisions and complexity into clarity. Currently pushing the boundaries of what's possible in Generative AI while completing my M.Sc. thesis on keeping AI both powerful AND private. Ready to revolutionize how your business thinks? Let's chat!",
+    bio: "🚀 Turning AI dreams into reality, one algorithm at a time. I don't just build AI systems—I craft intelligent experiences that understand, adapt, and amaze. From architecting RAG frameworks that boosted accuracy by 25% to reducing latency from a coffee break (2.1s) to a heartbeat (1.26s), I transform data into decisions and complexity into clarity. Fresh M.Sc. graduate (May 2025) with a thesis on Privacy Threats in Continuous Learning, now bringing cutting-edge AI solutions to life at Gemini Consulting. Ready to revolutionize how your business thinks? Let's chat!",
     location: "Saint Louis, MO",
     yearsExperience: 4,
     specializations: [
