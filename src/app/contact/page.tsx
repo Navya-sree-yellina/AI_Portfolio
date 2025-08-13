@@ -1,5 +1,9 @@
 import ContactSection from '@/components/features/ContactSection';
 
 export default function ContactPage() {
-  return <ContactSection />;
+  return (
+    <main className="min-h-screen">
+      <ContactSection />
+    </main>
+  );
 }
