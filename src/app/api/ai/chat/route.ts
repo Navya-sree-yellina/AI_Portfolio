@@ -69,6 +69,10 @@ function enhanceQuery(message: string): string {
     'skills': 'What are your technical skills and areas of expertise?',
     'education': 'What is your educational background and qualifications?',
     'projects': 'What are some key projects you have worked on?',
+    'work': 'Tell me about your work experience and current role',
+    'publications': 'What research papers or articles have you published?',
+    'publication': 'What research papers or articles have you published?',
+    'research': 'What research have you conducted?',
     'salary': 'What are your salary expectations?',
     'location': 'Where are you located and are you open to relocation?',
     'availability': 'When are you available to start a new position?',
@@ -91,14 +95,17 @@ function enhanceQuery(message: string): string {
     'langchain': 'What is your experience with LangChain?',
     'openai': 'Have you worked with OpenAI APIs?',
     'thesis': 'What is your thesis research about?',
-    'publications': 'What have you published?',
     'interests': 'What are your professional interests?',
     'goals': 'What are your career goals?',
     'team': 'Do you prefer working in teams or independently?',
     'remote': 'Are you open to remote work?',
     'hybrid': 'Are you open to hybrid work arrangements?',
     'visa': 'What is your visa status?',
-    'references': 'Can you provide references?'
+    'references': 'Can you provide references?',
+    'gemini': 'Tell me about your current role at Gemini Consulting',
+    'oracle': 'Tell me about your experience at Oracle Cerner',
+    'cerner': 'Tell me about your experience at Oracle Cerner',
+    'televerge': 'Tell me about your internship at Televerge'
   };
   
   // Check if it's a single word query and enhance it
@@ -129,6 +136,7 @@ export async function POST(request: NextRequest) {
     
     // Check if OpenAI API key is configured
     if (!openai || !process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key') {
+      console.log('OpenAI not configured, using fallback for:', enhancedMessage);
       // Fallback to intelligent mock responses
       return getFallbackResponse(enhancedMessage);
     }
@@ -181,9 +189,13 @@ function getFallbackResponse(message: string) {
   // Handle single-word queries first
   const singleWordResponses: { [key: string]: string } = {
     'experience': `I have 4+ years of experience as a Generative AI Engineer. Currently at Gemini Consulting & Services (Jan 2025-Present), previously at Oracle Cerner (2021-2023) and Televerge Communications (2021). I've architected enterprise AI platforms, implemented RAG frameworks with 25% accuracy improvement, and established MLOps pipelines reducing deployment time by 35%. My experience spans deep learning, transformers, LLMs, and cloud platforms (AWS, Azure, GCP).`,
+    'work': `I'm currently working as a Generative AI Engineer at Gemini Consulting & Services (Jan 2025-Present). In this role, I've architected an enterprise AI platform that reduced latency by 40%, implemented RAG frameworks achieving 25% NLP accuracy improvement, deployed multi-channel AI agents increasing throughput by 30%, and established automated MLOps pipelines. Previously, I worked at Oracle Cerner as a Systems Engineer and interned at Televerge Communications.`,
     'skills': `My technical expertise includes: Generative AI (Transformers, GPT, BERT, T5, LLMs), ML Frameworks (PyTorch, TensorFlow, Hugging Face), Cloud & MLOps (AWS SageMaker, Azure ML, Docker, Kubernetes), Programming (Python, SQL, JavaScript, Java, FastAPI, React), and specialized skills in RAG systems, LangChain, OpenAI API, and ethical AI development.`,
     'education': `I'm pursuing my M.Sc. in Computer Science at Saint Louis University (graduating May 2025) with a thesis on "Privacy Threats in Continuous Learning." I hold a B.Sc. in Computer Science from Koneru Lakshmaiah University with a minor in Artificial Intelligence. My coursework includes Deep Learning, Distributed Systems, and Transformers.`,
-    'projects': `Key projects include: Enterprise AI platform reducing latency by 40% (2.1s to 1.26s), RAG framework achieving 25% NLP accuracy improvement across 10,000+ queries, ML monitoring system for 50+ microservices, ETL pipelines improving query performance by 25%, and automated cloud infrastructure managing 200+ S3 buckets.`,
+    'projects': `Key projects include: Enterprise AI platform reducing latency by 40% (2.1s to 1.26s), RAG framework achieving 25% NLP accuracy improvement across 10,000+ queries, ML monitoring system for 50+ microservices, ETL pipelines improving query performance by 25%, and automated cloud infrastructure managing 200+ S3 buckets. Each project demonstrated significant performance improvements and scalability.`,
+    'publications': `I've published research on "Inspecting CNN and ANN Algorithms using Digit Recognition Model" in the International Research Journal of Engineering and Technology (IRJET) in June 2020. Currently, I'm working on my thesis research focused on "Privacy Threats in Continuous Learning" as part of my M.Sc. at Saint Louis University, exploring machine learning security and privacy-preserving techniques.`,
+    'publication': `I've published research on "Inspecting CNN and ANN Algorithms using Digit Recognition Model" in the International Research Journal of Engineering and Technology (IRJET) in June 2020. Currently, I'm working on my thesis research focused on "Privacy Threats in Continuous Learning" as part of my M.Sc. at Saint Louis University, exploring machine learning security and privacy-preserving techniques.`,
+    'research': `My research focuses on machine learning security and privacy. I'm currently working on my thesis "Privacy Threats in Continuous Learning" at Saint Louis University. I've also published research on "Inspecting CNN and ANN Algorithms using Digit Recognition Model" (IRJET 2020). My research interests include privacy-preserving ML, ethical AI development, and secure deployment of LLMs in production environments.`,
     'salary': `Based on my experience with enterprise AI solutions and proven track record of delivering 40% performance improvements, I'm looking for competitive compensation aligned with senior Generative AI Engineer roles. I'm open to discussing specific numbers based on the role, responsibilities, and total compensation package.`,
     'location': `I'm currently based in Saint Louis, MO. I'm open to both local opportunities and remote positions. For the right opportunity, I'm also willing to consider relocation within the United States.`,
     'availability': `I'm actively seeking new opportunities and can start with standard notice period. I'm particularly interested in roles focusing on Generative AI, LLMs, and MLOps where I can leverage my expertise in transformers and enterprise-scale AI solutions.`,
@@ -212,8 +224,12 @@ function getFallbackResponse(message: string) {
     response = `I'm currently pursuing my M.Sc. in Computer Science at Saint Louis University (graduating May 2025), with a thesis focused on "Privacy Threats in Continuous Learning" in machine learning security. I also hold a B.Sc. in Computer Science from Koneru Lakshmaiah University with a minor in Artificial Intelligence. My coursework includes Deep Learning, Distributed Systems, Machine Learning, Performance Analysis, and Transformers.`;
   } else if (lowerMessage.includes('available') || lowerMessage.includes('opportunity') || lowerMessage.includes('hire')) {
     response = `Yes, I'm actively seeking opportunities in Generative AI and MLOps roles! I'm particularly interested in positions that leverage my expertise in transformers, LLMs, and enterprise-scale AI solutions. With my proven track record of delivering 40% performance improvements and establishing automated MLOps pipelines, I'm excited to contribute to innovative AI projects. Feel free to download my resume or contact me at navyasreechoudhary@gmail.com to discuss potential opportunities.`;
+  } else if (lowerMessage.includes('publication') || lowerMessage.includes('research') || lowerMessage.includes('paper')) {
+    response = `I've published research on "Inspecting CNN and ANN Algorithms using Digit Recognition Model" in the International Research Journal of Engineering and Technology (IRJET) in June 2020. Currently, I'm working on my thesis research focused on "Privacy Threats in Continuous Learning" as part of my M.Sc. at Saint Louis University. My research interests include privacy-preserving ML, ethical AI development, and secure deployment of LLMs.`;
   } else if (lowerMessage.includes('achievement') || lowerMessage.includes('accomplishment')) {
     response = `Some of my key achievements include: reducing information retrieval latency by 40% (2.1s → 1.26s) for an enterprise AI platform, improving NLP accuracy by 25% across 10,000+ queries, increasing contact center throughput by 30%, and maintaining 99.9% uptime for systems handling 2.5M+ daily transactions. I've also published research on "Inspecting CNN and ANN Algorithms" and received the Women Entrepreneur of the Year award in 2018.`;
+  } else if (lowerMessage.includes('work') || lowerMessage.includes('job') || lowerMessage.includes('role')) {
+    response = `I'm currently working as a Generative AI Engineer at Gemini Consulting & Services (Jan 2025-Present), where I've architected enterprise AI platforms, implemented RAG frameworks, and established MLOps pipelines. Previously, I worked at Oracle Cerner as a Systems Engineer (2021-2023) building ML monitoring systems and ETL pipelines, and interned at Televerge Communications optimizing backend systems.`;
   } else if (lowerMessage.includes('skills') || lowerMessage.includes('technologies')) {
     response = `My technical expertise spans: Generative AI & Deep Learning (Transformers like GPT, BERT, T5, LLMs, OpenAI API, LangChain, RAG), ML Frameworks (PyTorch, TensorFlow, Hugging Face), Cloud & MLOps (AWS SageMaker, Azure ML, Docker, Kubernetes, CI/CD), and Programming (Python, SQL, JavaScript, Java, FastAPI, React). I also specialize in ethical AI development, privacy-preserving ML, and have strong research capabilities.`;
   } else {
