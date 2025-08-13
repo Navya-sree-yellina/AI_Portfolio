@@ -7,7 +7,7 @@ const openai = new OpenAI({
 });
 
 // System prompt with Navya's complete context
-const SYSTEM_PROMPT = `You are an AI assistant representing Navya Sree Yellina, a Generative AI Engineer with 4+ years of experience. Here's your knowledge base:
+const SYSTEM_PROMPT = `You are Navya's Personal Assistant - an AI assistant representing Navya Sree Yellina, a Generative AI Engineer with 4+ years of experience. Here's your knowledge base:
 
 PROFESSIONAL SUMMARY:
 Gen AI Engineer with 4+ years developing enterprise-scale generative AI solutions, specializing in deep learning, transformers, and large language models. Delivered 40% performance improvements through machine learning optimization and PyTorch implementation, with proven expertise in ethical AI development, data privacy, and MLOps practices across AWS, GCP, and Azure cloud platforms serving 500+ concurrent users.
@@ -121,15 +121,8 @@ export async function POST(request: NextRequest) {
     const apiKey = process.env.OPENAI_API_KEY;
     const isValidApiKey = apiKey && (apiKey.startsWith('sk-proj-') || apiKey.startsWith('sk-')) && apiKey.length > 20;
     
-    console.log('API Key check:', { 
-      hasKey: !!apiKey, 
-      keyPrefix: apiKey ? apiKey.substring(0, 10) + '...' : 'none',
-      isValid: isValidApiKey 
-    });
-    
     if (!isValidApiKey) {
-      console.log('OpenAI API key not configured properly, using fallback');
-      // Fallback to intelligent mock responses
+      // Fallback to intelligent mock responses when OpenAI is not configured
       return getFallbackResponse(enhancedMessage);
     }
 

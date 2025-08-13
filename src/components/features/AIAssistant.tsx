@@ -11,7 +11,7 @@ export default function AIAssistant() {
     {
       id: '1',
       role: 'assistant',
-      content: "Hi! I'm Navya's AI assistant. I can help you learn about her experience, projects, and expertise in Generative AI and MLOps. What would you like to know?",
+      content: "Hi! I'm Navya's personal assistant. I can help you learn about her experience, projects, and expertise in Generative AI and MLOps. Feel free to ask anything - even single words like 'skills', 'contact', or 'projects'!",
       timestamp: new Date().toISOString()
     }
   ]);
@@ -135,8 +135,8 @@ export default function AIAssistant() {
               <div className="flex items-center gap-3">
                 <Bot className="w-6 h-6" />
                 <div>
-                  <h3 className="font-semibold">AI Assistant</h3>
-                  <p className="text-xs opacity-90">Ask anything - even single words!</p>
+                  <h3 className="font-semibold">Navya's Personal Assistant</h3>
+                  <p className="text-xs opacity-90">Ask anything about my experience!</p>
                 </div>
               </div>
               <button
