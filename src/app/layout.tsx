@@ -46,6 +46,7 @@ export const metadata: Metadata = {
 
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import AIAssistant from '@/components/features/AIAssistant';
 
 export default function RootLayout({
   children,
@@ -60,6 +61,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <AIAssistant />
         <Analytics />
         <SpeedInsights />
       </body>

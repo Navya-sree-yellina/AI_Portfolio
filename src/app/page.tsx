@@ -1,6 +1,5 @@
 import ProfileHero from '@/components/features/ProfileHero';
 import ProjectShowcase from '@/components/features/ProjectShowcase';
-import AIAssistant from '@/components/features/AIAssistant';
 import ContactSection from '@/components/features/ContactSection';
 
 export default function Home() {
@@ -14,9 +13,6 @@ export default function Home() {
       
       {/* Contact Section */}
       <ContactSection />
-      
-      {/* AI Assistant (Floating) */}
-      <AIAssistant />
     </>
   );
 }
