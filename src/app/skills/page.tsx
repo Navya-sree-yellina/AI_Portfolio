@@ -10,7 +10,6 @@ import {
   Shield,
   Sparkles,
   TrendingUp,
-  BookOpen,
   Heart
 } from 'lucide-react';
 
@@ -119,11 +118,6 @@ const skillCategories = [
   }
 ];
 
-const certifications = [
-  { name: 'Deep Learning Specialization', issuer: 'Coursera', year: '2023' },
-  { name: 'AWS Certified ML Specialist', issuer: 'Amazon', year: '2023' },
-  { name: 'Ethics in AI', issuer: 'MIT', year: '2024' }
-];
 
 export default function SkillsPage() {
   return (
@@ -203,31 +197,6 @@ export default function SkillsPage() {
           ))}
         </div>
 
-        {/* Certifications */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className="bg-gradient-to-r from-blue-100 to-purple-100 rounded-xl p-8 mb-16"
-        >
-          <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
-            <BookOpen className="w-6 h-6" />
-            Certifications & Continuous Learning
-          </h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            {certifications.map((cert, index) => (
-              <div key={index} className="bg-white rounded-lg p-4">
-                <h3 className="font-semibold text-gray-900">{cert.name}</h3>
-                <p className="text-sm text-gray-600">{cert.issuer} • {cert.year}</p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-6 text-gray-700 italic">
-            "The capacity to learn is a gift; the ability to learn is a skill; the willingness to learn is a choice." 
-            - Currently exploring quantum computing and its intersection with ML!
-          </p>
-        </motion.div>
-
         {/* Fun Stats */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -236,7 +205,7 @@ export default function SkillsPage() {
           className="bg-white rounded-xl p-8 shadow-lg"
         >
           <h2 className="text-2xl font-bold text-gray-900 mb-6">By the Numbers</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-blue-600">10K+</div>
               <div className="text-gray-600">Lines of Python</div>
@@ -244,10 +213,6 @@ export default function SkillsPage() {
             <div className="text-center">
               <div className="text-3xl font-bold text-green-600">50+</div>
               <div className="text-gray-600">Models Trained</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600">2.5M+</div>
-              <div className="text-gray-600">Daily Transactions</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-orange-600">∞</div>
