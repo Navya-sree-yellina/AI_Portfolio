@@ -230,23 +230,23 @@ export default function ContactSection() {
                 </a>
                 
                 <a
-                  href="https://linkedin.com/in/navyasreeyellina"
+                  href="https://www.linkedin.com/in/navya-sree-yellina/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 text-gray-700 hover:text-blue-600 transition-colors"
                 >
                   <Linkedin className="w-5 h-5" />
-                  <span>linkedin.com/in/navyasreeyellina</span>
+                  <span>linkedin.com/in/navya-sree-yellina</span>
                 </a>
                 
                 <a
-                  href="https://github.com/navyasreeyellina"
+                  href="https://github.com/Navya-sree-yellina"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 text-gray-700 hover:text-blue-600 transition-colors"
                 >
                   <Github className="w-5 h-5" />
-                  <span>github.com/navyasreeyellina</span>
+                  <span>github.com/Navya-sree-yellina</span>
                 </a>
               </div>
             </div>

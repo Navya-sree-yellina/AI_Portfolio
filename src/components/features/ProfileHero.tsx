@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, Download, MapPin, Briefcase } from 'lucide-react';
-import Link from 'next/link';
 
 interface ProfileHeroProps {
   profile?: {
@@ -36,7 +35,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
       "Deep Learning & PyTorch"
     ],
     linkedinUrl: "https://www.linkedin.com/in/navya-sree-yellina/",
-    githubUrl: "https://github.com/Navya-sree-yellina/",
+    githubUrl: "https://github.com/Navya-sree-yellina",
     email: "navyasreechoudhary@gmail.com",
     resumePdfUrl: "/resume.pdf"
   };
@@ -102,13 +101,13 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Link
+              <a
                 href="#contact"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
               >
                 <Mail className="w-5 h-5" />
                 Get In Touch
-              </Link>
+              </a>
             </motion.div>
 
             {data.resumePdfUrl && (
