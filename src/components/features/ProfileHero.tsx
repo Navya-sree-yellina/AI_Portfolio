@@ -36,7 +36,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
       "Deep Learning & PyTorch"
     ],
     linkedinUrl: "https://www.linkedin.com/in/navya-sree-yellina/",
-    githubUrl: "https://github.com/Navya-sree-yellina",
+    githubUrl: "https://github.com/Navya-sree-yellina/",
     email: "navyasreechoudhary@gmail.com",
     resumePdfUrl: "/resume.pdf"
   };
@@ -118,8 +118,8 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
               >
                 <a
                   href={data.resumePdfUrl}
-                  download
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-lg font-semibold border-2 border-gray-300 hover:bg-gray-50 transition-colors"
+                  download="NavyaSreeYellina_Resume.pdf"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-lg font-semibold border-2 border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <Download className="w-5 h-5" />
                   Download Resume
@@ -136,7 +136,9 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  className="p-3 bg-white text-gray-700 rounded-lg border-2 border-gray-300 hover:bg-gray-50 transition-colors"
+                  className="p-3 bg-white text-gray-700 rounded-lg border-2 border-gray-300 hover:bg-gray-50 hover:border-blue-400 transition-all cursor-pointer"
+                  title="View LinkedIn Profile"
+                  aria-label="LinkedIn Profile"
                 >
                   <Linkedin className="w-5 h-5" />
                 </motion.a>
@@ -149,7 +151,9 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  className="p-3 bg-white text-gray-700 rounded-lg border-2 border-gray-300 hover:bg-gray-50 transition-colors"
+                  className="p-3 bg-white text-gray-700 rounded-lg border-2 border-gray-300 hover:bg-gray-50 hover:border-blue-400 transition-all cursor-pointer"
+                  title="View GitHub Profile"
+                  aria-label="GitHub Profile"
                 >
                   <Github className="w-5 h-5" />
                 </motion.a>
