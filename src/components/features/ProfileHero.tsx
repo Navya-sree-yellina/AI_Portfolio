@@ -35,8 +35,8 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
       "Privacy-Preserving ML",
       "Deep Learning & PyTorch"
     ],
-    linkedinUrl: "https://linkedin.com/in/navya-sree-yellina",
-    githubUrl: "https://github.com/navyasreeyellina",
+    linkedinUrl: "https://www.linkedin.com/in/navya-sree-yellina/",
+    githubUrl: "https://github.com/Navya-sree-yellina",
     email: "navyasreechoudhary@gmail.com",
     resumePdfUrl: "/resume.pdf"
   };
