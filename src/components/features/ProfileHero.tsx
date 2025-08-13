@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Github, Linkedin, Mail, Download, MapPin, Briefcase } from 'lucide-react';
+import { Mail, Download, MapPin, Briefcase } from 'lucide-react';
 
 interface ProfileHeroProps {
   profile?: {
@@ -126,38 +126,6 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
               </motion.div>
             )}
 
-            {/* Social Links */}
-            <div className="flex gap-3">
-              {data.linkedinUrl && (
-                <motion.a
-                  href={data.linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-3 bg-white text-gray-700 rounded-lg border-2 border-gray-300 hover:bg-gray-50 hover:border-blue-400 transition-all cursor-pointer"
-                  title="View LinkedIn Profile"
-                  aria-label="LinkedIn Profile"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </motion.a>
-              )}
-              
-              {data.githubUrl && (
-                <motion.a
-                  href={data.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="p-3 bg-white text-gray-700 rounded-lg border-2 border-gray-300 hover:bg-gray-50 hover:border-blue-400 transition-all cursor-pointer"
-                  title="View GitHub Profile"
-                  aria-label="GitHub Profile"
-                >
-                  <Github className="w-5 h-5" />
-                </motion.a>
-              )}
-            </div>
           </div>
         </motion.div>
       </div>
