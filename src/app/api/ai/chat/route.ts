@@ -169,6 +169,14 @@ export async function POST(request: NextRequest) {
 
 function getFallbackResponse(message: string) {
   const lowerMessage = message.toLowerCase();
+  // Remove 'navya', 'navya's', 'navyas' and common words to extract the key term
+  const cleanedMessage = lowerMessage
+    .replace(/navya'?s?\s*/g, '')
+    .replace(/what\s+is\s+/g, '')
+    .replace(/tell\s+me\s+about\s+/g, '')
+    .replace(/[?!.,]/g, '')
+    .trim();
+  
   let response = '';
 
   // Handle single-word queries first
@@ -188,16 +196,28 @@ function getFallbackResponse(message: string) {
     'achievements': `Key achievements: 40% latency reduction (2.1s to 1.26s) for enterprise AI platform, 25% NLP accuracy improvement, 30% increase in contact center throughput, 99.9% uptime for 2.5M+ daily transactions, Published research on CNN/ANN algorithms (IRJET 2020), Women Entrepreneur of the Year (2018), Employee of the Month for reducing incidents by 30%.`
   };
 
-  // Check for single-word match
-  const cleanMessage = lowerMessage.trim().replace(/[?!.,]/g, '');
-  if (singleWordResponses[cleanMessage]) {
+  // Check for single-word match (after cleaning)
+  if (singleWordResponses[cleanedMessage]) {
     return NextResponse.json({
-      response: singleWordResponses[cleanMessage],
+      response: singleWordResponses[cleanedMessage],
       metadata: {
         confidence: 0.95,
         suggestedActions: getSuggestedActions(message)
       }
     });
+  }
+  
+  // Also check for the key terms in the original message
+  for (const [key, value] of Object.entries(singleWordResponses)) {
+    if (lowerMessage.includes(key)) {
+      return NextResponse.json({
+        response: value,
+        metadata: {
+          confidence: 0.95,
+          suggestedActions: getSuggestedActions(message)
+        }
+      });
+    }
   }
 
   if (lowerMessage.includes('rag') || lowerMessage.includes('retrieval')) {
@@ -220,6 +240,8 @@ function getFallbackResponse(message: string) {
     response = `My technical expertise spans: Generative AI & Deep Learning (Transformers like GPT, BERT, T5, LLMs, OpenAI API, LangChain, RAG), ML Frameworks (PyTorch, TensorFlow, Hugging Face), Cloud & MLOps (AWS SageMaker, Azure ML, Docker, Kubernetes, CI/CD), and Programming (Python, SQL, JavaScript, Java, FastAPI, React). I also specialize in ethical AI development, privacy-preserving ML, and have strong research capabilities.`;
   } else if (lowerMessage.includes('contact') || lowerMessage.includes('email') || lowerMessage.includes('reach')) {
     response = `You can reach me at navyasreechoudhary@gmail.com. I'm also available on LinkedIn at navya-sree-yellina. I'm based in Saint Louis, MO and am actively seeking opportunities in Generative AI and MLOps roles. Feel free to reach out to discuss potential opportunities or collaborations!`;
+  } else if (lowerMessage.includes('project')) {
+    response = `Key projects include: Enterprise AI platform reducing latency by 40% (2.1s to 1.26s), RAG framework achieving 25% NLP accuracy improvement across 10,000+ queries, ML monitoring system for 50+ microservices, ETL pipelines improving query performance by 25%, and automated cloud infrastructure managing 200+ S3 buckets. Each project demonstrated significant performance improvements and scalability.`;
   } else {
     response = `I'd be happy to help you learn more about my experience! You can ask me about my work with generative AI and transformers, MLOps implementations, specific projects at Gemini Consulting or Oracle Cerner, my research on privacy-preserving ML, technical skills, or career opportunities. What specific aspect of my background would you like to explore?`;
   }
