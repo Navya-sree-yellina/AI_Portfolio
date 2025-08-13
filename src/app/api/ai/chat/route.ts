@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-// Initialize OpenAI client conditionally
-const openai = process.env.OPENAI_API_KEY 
-  ? new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    })
-  : null;
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || '',
+});
 
 // System prompt with Navya's complete context
 const SYSTEM_PROMPT = `You are an AI assistant representing Navya Sree Yellina, a Generative AI Engineer with 4+ years of experience. Here's your knowledge base:
@@ -59,62 +57,47 @@ INSTRUCTIONS:
 6. For recruiter-style queries, be professional and provide detailed information that would help in recruitment decisions.
 7. Always provide actionable next steps or additional information the user might find helpful.`;
 
-// Helper function to enhance single-word queries
+// Helper function to enhance single-word queries for better AI understanding
 function enhanceQuery(message: string): string {
   const lowerMessage = message.toLowerCase().trim();
+  const cleanMessage = lowerMessage.replace(/[?!.,]/g, '');
   
-  // Map common single-word queries to more detailed questions
-  const queryEnhancements: { [key: string]: string } = {
-    'experience': 'Tell me about your professional experience and key roles',
-    'skills': 'What are your technical skills and areas of expertise?',
-    'education': 'What is your educational background and qualifications?',
-    'projects': 'What are some key projects you have worked on?',
-    'work': 'Tell me about your work experience and current role',
-    'publications': 'What research papers or articles have you published?',
-    'publication': 'What research papers or articles have you published?',
-    'research': 'What research have you conducted?',
-    'salary': 'What are your salary expectations?',
-    'location': 'Where are you located and are you open to relocation?',
-    'availability': 'When are you available to start a new position?',
-    'resume': 'Can you provide your resume or CV?',
-    'contact': 'How can I contact you?',
-    'achievements': 'What are your key achievements and accomplishments?',
-    'certifications': 'What certifications do you have?',
-    'languages': 'What programming languages are you proficient in?',
-    'frameworks': 'What frameworks and tools do you work with?',
-    'mlops': 'Tell me about your MLOps experience',
-    'ai': 'What is your experience with AI and machine learning?',
-    'rag': 'Tell me about your experience with RAG systems',
-    'transformers': 'What is your experience with transformers and LLMs?',
-    'cloud': 'What cloud platforms have you worked with?',
-    'docker': 'Do you have experience with Docker and containerization?',
-    'kubernetes': 'Tell me about your Kubernetes experience',
-    'python': 'What is your experience with Python?',
-    'pytorch': 'Tell me about your PyTorch experience',
-    'tensorflow': 'Do you work with TensorFlow?',
-    'langchain': 'What is your experience with LangChain?',
-    'openai': 'Have you worked with OpenAI APIs?',
-    'thesis': 'What is your thesis research about?',
-    'interests': 'What are your professional interests?',
-    'goals': 'What are your career goals?',
-    'team': 'Do you prefer working in teams or independently?',
-    'remote': 'Are you open to remote work?',
-    'hybrid': 'Are you open to hybrid work arrangements?',
-    'visa': 'What is your visa status?',
-    'references': 'Can you provide references?',
-    'gemini': 'Tell me about your current role at Gemini Consulting',
-    'oracle': 'Tell me about your experience at Oracle Cerner',
-    'cerner': 'Tell me about your experience at Oracle Cerner',
-    'televerge': 'Tell me about your internship at Televerge'
-  };
-  
-  // Check if it's a single word query and enhance it
+  // For single words, provide more context to help the AI understand
+  // This is just a hint - OpenAI will handle the actual response
   const words = message.trim().split(/\s+/);
-  if (words.length <= 2) {
-    const key = lowerMessage.replace(/[?!.,]/g, '');
-    if (queryEnhancements[key]) {
-      return queryEnhancements[key];
+  if (words.length === 1) {
+    // Add context for single-word queries to help OpenAI understand better
+    const contextMap: { [key: string]: string } = {
+      'experience': 'Tell me about Navya\'s professional experience',
+      'skills': 'What are Navya\'s technical skills?',
+      'education': 'What is Navya\'s educational background?',
+      'projects': 'What projects has Navya worked on?',
+      'work': 'Tell me about Navya\'s work experience',
+      'publications': 'What has Navya published?',
+      'salary': 'What are Navya\'s salary expectations?',
+      'location': 'Where is Navya located?',
+      'availability': 'When is Navya available?',
+      'resume': 'Can you provide Navya\'s resume details?',
+      'contact': 'How can I contact Navya?',
+      'achievements': 'What are Navya\'s achievements?',
+      'mlops': 'Tell me about Navya\'s MLOps experience',
+      'ai': 'What is Navya\'s AI experience?',
+      'rag': 'Tell me about Navya\'s RAG experience',
+      'transformers': 'What is Navya\'s experience with transformers?',
+      'cloud': 'What cloud platforms has Navya worked with?',
+      'python': 'What is Navya\'s Python experience?',
+      'thesis': 'What is Navya\'s thesis about?',
+      'goals': 'What are Navya\'s career goals?',
+      'remote': 'Is Navya open to remote work?',
+      'visa': 'What is Navya\'s visa status?'
+    };
+    
+    if (contextMap[cleanMessage]) {
+      return contextMap[cleanMessage];
     }
+    
+    // For any other single word, add context
+    return `Tell me about Navya's ${cleanMessage}`;
   }
   
   return message;
@@ -134,9 +117,12 @@ export async function POST(request: NextRequest) {
     // Enhance single-word queries for better context
     const enhancedMessage = enhanceQuery(message);
     
-    // Check if OpenAI API key is configured
-    if (!openai || !process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key') {
-      console.log('OpenAI not configured, using fallback for:', enhancedMessage);
+    // Check if OpenAI API key is properly configured
+    const apiKey = process.env.OPENAI_API_KEY;
+    const isValidApiKey = apiKey && apiKey.startsWith('sk-') && apiKey.length > 20;
+    
+    if (!isValidApiKey) {
+      console.log('OpenAI API key not configured properly, using fallback');
       // Fallback to intelligent mock responses
       return getFallbackResponse(enhancedMessage);
     }
@@ -168,8 +154,8 @@ export async function POST(request: NextRequest) {
           suggestedActions: getSuggestedActions(message)
         }
       });
-    } catch (openAIError) {
-      console.error('OpenAI API Error:', openAIError);
+    } catch (openAIError: any) {
+      console.error('OpenAI API Error:', openAIError.message || openAIError);
       // Fallback to mock responses if OpenAI fails
       return getFallbackResponse(enhancedMessage);
     }
