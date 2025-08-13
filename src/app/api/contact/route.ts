@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { createClient } from '@supabase/supabase-js';
 
 // Check if Resend is available
 let Resend: any;
@@ -12,6 +13,12 @@ try {
 
 // Initialize Resend if API key is available
 const resend = process.env.RESEND_API_KEY && Resend ? new Resend(process.env.RESEND_API_KEY) : null;
+
+// Initialize Supabase client
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_KEY!
+);
 
 // Initialize Nodemailer for email sending
 const createNodemailerTransporter = () => {
@@ -151,6 +158,37 @@ export async function POST(request: NextRequest) {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
     body.ip = ip;
 
+    // Save contact to Supabase
+    let contactId: string | null = null;
+    let autoReplySent = false;
+    
+    try {
+      const { data: contactData, error: dbError } = await supabase
+        .from('contacts')
+        .insert({
+          name,
+          email,
+          company: body.company,
+          inquiry_type: inquiryType,
+          urgency: body.urgency,
+          message,
+          technologies_of_interest: body.technologiesOfInterest,
+          ip_address: ip,
+          auto_reply_sent: false
+        })
+        .select()
+        .single();
+
+      if (dbError) {
+        console.error('Error saving contact to database:', dbError);
+      } else {
+        contactId = contactData.id;
+        console.log(`Contact saved to database with ID: ${contactId}`);
+      }
+    } catch (dbErr) {
+      console.error('Database error:', dbErr);
+    }
+
     // Send email notification
     let emailSent = false;
     const emailTo = process.env.CONTACT_EMAIL_TO || 'navyasreechoudhary@gmail.com';
@@ -177,7 +215,7 @@ export async function POST(request: NextRequest) {
         emailSent = true;
         console.log(`Email sent successfully via Resend to ${emailTo}`);
         
-        // Send auto-reply
+        // Try to send auto-reply
         try {
           const autoReplyHTML = `
           <!DOCTYPE html>
@@ -212,16 +250,39 @@ export async function POST(request: NextRequest) {
           </html>
           `;
 
-          await resend.emails.send({
-            from: 'Navya Sree <onboarding@resend.dev>',
-            to: email,
-            subject: 'Thank you for your message!',
-            html: autoReplyHTML,
-          });
-          
-          console.log(`Auto-reply sent via Resend to ${email}`);
+          // Try to send to the actual user email
+          try {
+            await resend.emails.send({
+              from: 'Navya Sree <onboarding@resend.dev>',
+              to: email,
+              subject: 'Thank you for your message!',
+              html: autoReplyHTML,
+            });
+            
+            autoReplySent = true;
+            console.log(`Auto-reply sent successfully to ${email}`);
+            
+            // Update database to mark auto-reply as sent
+            if (contactId) {
+              await supabase
+                .from('contacts')
+                .update({ 
+                  auto_reply_sent: true,
+                  auto_reply_sent_at: new Date().toISOString()
+                })
+                .eq('id', contactId);
+            }
+          } catch (autoReplyError: any) {
+            // If sending to user email fails (test mode limitation), log it
+            if (autoReplyError.statusCode === 403) {
+              console.log(`Auto-reply pending for ${email} - Resend test mode only allows sending to verified email`);
+              console.log('Contact saved in database for future auto-reply when domain is verified');
+            } else {
+              console.error('Auto-reply error:', autoReplyError);
+            }
+          }
         } catch (autoReplyError) {
-          console.error('Auto-reply error:', autoReplyError);
+          console.error('Auto-reply setup error:', autoReplyError);
         }
         
       } catch (resendError: any) {
@@ -321,7 +382,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       success: true,
       message: 'Thank you for your message. I\'ll get back to you within 24 hours!',
-      emailSent
+      emailSent,
+      contactSaved: !!contactId,
+      autoReplySent,
+      contactId
     });
 
   } catch (error: any) {

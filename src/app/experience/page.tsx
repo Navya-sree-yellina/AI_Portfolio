@@ -21,6 +21,7 @@ const experiences = [
     company: 'Gemini Consulting & Services',
     location: 'Chesterfield, MO',
     duration: 'Jan 2025 - Present',
+    year: 2025,
     type: 'Full-time',
     description: 'Leading the charge in enterprise AI transformation',
     highlights: [
@@ -39,6 +40,7 @@ const experiences = [
     company: 'Oracle Cerner',
     location: 'Bengaluru, India',
     duration: 'May 2021 - July 2023',
+    year: 2021,
     type: 'Full-time',
     description: 'Building robust ML infrastructure for healthcare',
     highlights: [
@@ -57,6 +59,7 @@ const experiences = [
     company: 'Televerge Communications',
     location: 'Bengaluru, India',
     duration: 'Jan 2021 - April 2021',
+    year: 2021,
     type: 'Internship',
     description: 'Optimizing telecommunications infrastructure',
     highlights: [
@@ -69,7 +72,14 @@ const experiences = [
     impact: 'Served 5,000+ active users with improved performance',
     personalNote: 'My first industry experience - where I learned that elegant code and scalability go hand in hand.'
   }
-];
+].sort((a, b) => {
+  // Sort by year first (descending)
+  if (b.year !== a.year) return b.year - a.year;
+  // If same year, put full-time before internship
+  if (a.type === 'Full-time' && b.type === 'Internship') return -1;
+  if (a.type === 'Internship' && b.type === 'Full-time') return 1;
+  return 0;
+});
 
 const achievements = [
   {

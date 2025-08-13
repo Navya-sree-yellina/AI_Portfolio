@@ -258,7 +258,16 @@ export default function ContactSection() {
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
                   <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                  <span className="text-gray-700">Currently available for opportunities</span>
+                  <span className="text-green-700 font-semibold">Available for immediate joining</span>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="w-5 h-5 flex items-center justify-center">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  </div>
+                  <span className="text-gray-700">
+                    <strong>Visa Status:</strong> F1 OPT
+                  </span>
                 </div>
                 
                 <div className="flex items-center gap-3">
@@ -267,10 +276,26 @@ export default function ContactSection() {
                 </div>
               </div>
 
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-                <p className="text-sm text-gray-700">
-                  <strong>Interested in:</strong> Senior Gen AI roles, MLOps positions, consulting projects, and research collaborations.
-                </p>
+              <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg border border-indigo-200">
+                <p className="text-sm font-semibold text-indigo-900 mb-2">Interested in:</p>
+                <ul className="space-y-1 text-sm text-gray-700">
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 mt-0.5">•</span>
+                    <span>Generative AI Roles</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 mt-0.5">•</span>
+                    <span>MLOps Positions</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 mt-0.5">•</span>
+                    <span>Freelance/Consulting Projects</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-indigo-600 mt-0.5">•</span>
+                    <span>Research Contributions/Collaborations</span>
+                  </li>
+                </ul>
               </div>
             </div>
           </motion.div>
