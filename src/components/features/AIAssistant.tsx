@@ -82,19 +82,19 @@ export default function AIAssistant() {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSend();
     }
   };
 
-  // Suggested questions
+  // Suggested questions - include single-word examples
   const suggestions = [
-    "What's your experience with RAG?",
-    "Tell me about your MLOps projects",
-    "What are your key achievements?",
-    "Are you available for opportunities?"
+    "Experience",
+    "Skills",
+    "Projects",
+    "Available?"
   ];
 
   const handleSuggestion = (suggestion: string) => {
@@ -136,7 +136,7 @@ export default function AIAssistant() {
                 <Bot className="w-6 h-6" />
                 <div>
                   <h3 className="font-semibold">AI Assistant</h3>
-                  <p className="text-xs opacity-90">Ask about Navya's expertise</p>
+                  <p className="text-xs opacity-90">Ask anything - even single words!</p>
                 </div>
               </div>
               <button
@@ -190,10 +190,10 @@ export default function AIAssistant() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Suggestions */}
+            {/* Suggestions - Show more options */}
             {messages.length === 1 && (
               <div className="px-4 pb-2">
-                <p className="text-xs text-gray-500 mb-2">Suggested questions:</p>
+                <p className="text-xs text-gray-500 mb-2">Try these quick queries:</p>
                 <div className="flex flex-wrap gap-2">
                   {suggestions.map((suggestion) => (
                     <button
@@ -205,6 +205,7 @@ export default function AIAssistant() {
                     </button>
                   ))}
                 </div>
+                <p className="text-xs text-gray-400 mt-2">Tip: You can use single words like "experience", "skills", "education"</p>
               </div>
             )}
 
@@ -215,7 +216,7 @@ export default function AIAssistant() {
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  onKeyPress={handleKeyPress}
+                  onKeyDown={handleKeyDown}
                   placeholder="Ask about my experience..."
                   className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                   disabled={isLoading}

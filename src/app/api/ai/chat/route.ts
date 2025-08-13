@@ -50,7 +50,68 @@ ACHIEVEMENTS:
 
 Contact: navyasreechoudhary@gmail.com | LinkedIn: navya-sree-yellina | Location: Saint Louis, MO
 
-Respond as if you are Navya, maintaining a professional, friendly, and knowledgeable tone. Be specific about experiences and achievements, using actual metrics from the resume. When discussing technical topics, demonstrate deep expertise. For opportunities, show enthusiasm and availability.`;
+INSTRUCTIONS:
+1. Respond as if you are Navya, maintaining a professional, friendly, and knowledgeable tone.
+2. Be specific about experiences and achievements, using actual metrics from the resume.
+3. When discussing technical topics, demonstrate deep expertise.
+4. For opportunities, show enthusiasm and availability.
+5. IMPORTANT: When receiving single-word queries like "experience", "skills", "education", "projects", "salary", "location", provide comprehensive, relevant information about that topic.
+6. For recruiter-style queries, be professional and provide detailed information that would help in recruitment decisions.
+7. Always provide actionable next steps or additional information the user might find helpful.`;
+
+// Helper function to enhance single-word queries
+function enhanceQuery(message: string): string {
+  const lowerMessage = message.toLowerCase().trim();
+  
+  // Map common single-word queries to more detailed questions
+  const queryEnhancements: { [key: string]: string } = {
+    'experience': 'Tell me about your professional experience and key roles',
+    'skills': 'What are your technical skills and areas of expertise?',
+    'education': 'What is your educational background and qualifications?',
+    'projects': 'What are some key projects you have worked on?',
+    'salary': 'What are your salary expectations?',
+    'location': 'Where are you located and are you open to relocation?',
+    'availability': 'When are you available to start a new position?',
+    'resume': 'Can you provide your resume or CV?',
+    'contact': 'How can I contact you?',
+    'achievements': 'What are your key achievements and accomplishments?',
+    'certifications': 'What certifications do you have?',
+    'languages': 'What programming languages are you proficient in?',
+    'frameworks': 'What frameworks and tools do you work with?',
+    'mlops': 'Tell me about your MLOps experience',
+    'ai': 'What is your experience with AI and machine learning?',
+    'rag': 'Tell me about your experience with RAG systems',
+    'transformers': 'What is your experience with transformers and LLMs?',
+    'cloud': 'What cloud platforms have you worked with?',
+    'docker': 'Do you have experience with Docker and containerization?',
+    'kubernetes': 'Tell me about your Kubernetes experience',
+    'python': 'What is your experience with Python?',
+    'pytorch': 'Tell me about your PyTorch experience',
+    'tensorflow': 'Do you work with TensorFlow?',
+    'langchain': 'What is your experience with LangChain?',
+    'openai': 'Have you worked with OpenAI APIs?',
+    'thesis': 'What is your thesis research about?',
+    'publications': 'What have you published?',
+    'interests': 'What are your professional interests?',
+    'goals': 'What are your career goals?',
+    'team': 'Do you prefer working in teams or independently?',
+    'remote': 'Are you open to remote work?',
+    'hybrid': 'Are you open to hybrid work arrangements?',
+    'visa': 'What is your visa status?',
+    'references': 'Can you provide references?'
+  };
+  
+  // Check if it's a single word query and enhance it
+  const words = message.trim().split(/\s+/);
+  if (words.length <= 2) {
+    const key = lowerMessage.replace(/[?!.,]/g, '');
+    if (queryEnhancements[key]) {
+      return queryEnhancements[key];
+    }
+  }
+  
+  return message;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -63,10 +124,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Enhance single-word queries for better context
+    const enhancedMessage = enhanceQuery(message);
+    
     // Check if OpenAI API key is configured
     if (!openai || !process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_openai_api_key') {
       // Fallback to intelligent mock responses
-      return getFallbackResponse(message);
+      return getFallbackResponse(enhancedMessage);
     }
 
     try {
@@ -80,7 +144,7 @@ export async function POST(request: NextRequest) {
           },
           {
             role: 'user',
-            content: message
+            content: enhancedMessage
           }
         ],
         temperature: 0.7,
@@ -99,7 +163,7 @@ export async function POST(request: NextRequest) {
     } catch (openAIError) {
       console.error('OpenAI API Error:', openAIError);
       // Fallback to mock responses if OpenAI fails
-      return getFallbackResponse(message);
+      return getFallbackResponse(enhancedMessage);
     }
   } catch (error) {
     console.error('AI Chat Error:', error);
@@ -113,6 +177,30 @@ export async function POST(request: NextRequest) {
 function getFallbackResponse(message: string) {
   const lowerMessage = message.toLowerCase();
   let response = '';
+
+  // Handle single-word queries first
+  const singleWordResponses: { [key: string]: string } = {
+    'experience': `I have 4+ years of experience as a Generative AI Engineer. Currently at Gemini Consulting & Services (Jan 2025-Present), previously at Oracle Cerner (2021-2023) and Televerge Communications (2021). I've architected enterprise AI platforms, implemented RAG frameworks with 25% accuracy improvement, and established MLOps pipelines reducing deployment time by 35%. My experience spans deep learning, transformers, LLMs, and cloud platforms (AWS, Azure, GCP).`,
+    'skills': `My technical expertise includes: Generative AI (Transformers, GPT, BERT, T5, LLMs), ML Frameworks (PyTorch, TensorFlow, Hugging Face), Cloud & MLOps (AWS SageMaker, Azure ML, Docker, Kubernetes), Programming (Python, SQL, JavaScript, Java, FastAPI, React), and specialized skills in RAG systems, LangChain, OpenAI API, and ethical AI development.`,
+    'education': `I'm pursuing my M.Sc. in Computer Science at Saint Louis University (graduating May 2025) with a thesis on "Privacy Threats in Continuous Learning." I hold a B.Sc. in Computer Science from Koneru Lakshmaiah University with a minor in Artificial Intelligence. My coursework includes Deep Learning, Distributed Systems, and Transformers.`,
+    'projects': `Key projects include: Enterprise AI platform reducing latency by 40% (2.1s to 1.26s), RAG framework achieving 25% NLP accuracy improvement across 10,000+ queries, ML monitoring system for 50+ microservices, ETL pipelines improving query performance by 25%, and automated cloud infrastructure managing 200+ S3 buckets.`,
+    'salary': `Based on my experience with enterprise AI solutions and proven track record of delivering 40% performance improvements, I'm looking for competitive compensation aligned with senior Generative AI Engineer roles. I'm open to discussing specific numbers based on the role, responsibilities, and total compensation package.`,
+    'location': `I'm currently based in Saint Louis, MO. I'm open to both local opportunities and remote positions. For the right opportunity, I'm also willing to consider relocation within the United States.`,
+    'availability': `I'm actively seeking new opportunities and can start with standard notice period. I'm particularly interested in roles focusing on Generative AI, LLMs, and MLOps where I can leverage my expertise in transformers and enterprise-scale AI solutions.`,
+    'achievements': `Key achievements: 40% latency reduction (2.1s to 1.26s) for enterprise AI platform, 25% NLP accuracy improvement, 30% increase in contact center throughput, 99.9% uptime for 2.5M+ daily transactions, Published research on CNN/ANN algorithms (IRJET 2020), Women Entrepreneur of the Year (2018), Employee of the Month for reducing incidents by 30%.`
+  };
+
+  // Check for single-word match
+  const cleanMessage = lowerMessage.trim().replace(/[?!.,]/g, '');
+  if (singleWordResponses[cleanMessage]) {
+    return NextResponse.json({
+      response: singleWordResponses[cleanMessage],
+      metadata: {
+        confidence: 0.95,
+        suggestedActions: getSuggestedActions(message)
+      }
+    });
+  }
 
   if (lowerMessage.includes('rag') || lowerMessage.includes('retrieval')) {
     response = `I have extensive experience with RAG (Retrieval-Augmented Generation) systems. At Gemini Consulting, I implemented a RAG framework with Python, LangChain, and machine learning optimization techniques that achieved a 25% improvement in NLP accuracy across 10,000+ production queries. The system reduced information retrieval latency by 40% (from 2.1s to 1.26s) while supporting 500+ concurrent users. I utilized OpenAI GPT API, transformers, and vector databases for efficient document retrieval and generation.`;
