@@ -23,8 +23,8 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
   // Default profile data for initial development
   const defaultProfile = {
     fullName: "Navya Sree Yellina",
-    title: "Generative AI Engineer",
-    bio: "Hey there! 👋 I'm an AI engineer who believes technology should feel human. Whether I'm building RAG systems that actually understand context or creating privacy-first ML solutions, I'm driven by one question: How can AI make life better? With 4+ years turning complex problems into elegant solutions, I've helped 500+ users experience the magic of well-crafted AI. Let's build something amazing together!",
+    title: "Generative AI Engineer | ML Architect | Innovation Catalyst",
+    bio: "🚀 Turning AI dreams into reality, one algorithm at a time. I don't just build AI systems—I craft intelligent experiences that understand, adapt, and amaze. From architecting RAG frameworks that boosted accuracy by 25% to reducing latency from a coffee break (2.1s) to a heartbeat (1.26s), I transform data into decisions and complexity into clarity. Currently pushing the boundaries of what's possible in Generative AI while completing my M.Sc. thesis on keeping AI both powerful AND private. Ready to revolutionize how your business thinks? Let's chat!",
     location: "Saint Louis, MO",
     yearsExperience: 4,
     specializations: [
