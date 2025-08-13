@@ -119,7 +119,13 @@ export async function POST(request: NextRequest) {
     
     // Check if OpenAI API key is properly configured
     const apiKey = process.env.OPENAI_API_KEY;
-    const isValidApiKey = apiKey && apiKey.startsWith('sk-') && apiKey.length > 20;
+    const isValidApiKey = apiKey && (apiKey.startsWith('sk-proj-') || apiKey.startsWith('sk-')) && apiKey.length > 20;
+    
+    console.log('API Key check:', { 
+      hasKey: !!apiKey, 
+      keyPrefix: apiKey ? apiKey.substring(0, 10) + '...' : 'none',
+      isValid: isValidApiKey 
+    });
     
     if (!isValidApiKey) {
       console.log('OpenAI API key not configured properly, using fallback');
@@ -182,6 +188,7 @@ function getFallbackResponse(message: string) {
     'publications': `I've published research on "Inspecting CNN and ANN Algorithms using Digit Recognition Model" in the International Research Journal of Engineering and Technology (IRJET) in June 2020. Currently, I'm working on my thesis research focused on "Privacy Threats in Continuous Learning" as part of my M.Sc. at Saint Louis University, exploring machine learning security and privacy-preserving techniques.`,
     'publication': `I've published research on "Inspecting CNN and ANN Algorithms using Digit Recognition Model" in the International Research Journal of Engineering and Technology (IRJET) in June 2020. Currently, I'm working on my thesis research focused on "Privacy Threats in Continuous Learning" as part of my M.Sc. at Saint Louis University, exploring machine learning security and privacy-preserving techniques.`,
     'research': `My research focuses on machine learning security and privacy. I'm currently working on my thesis "Privacy Threats in Continuous Learning" at Saint Louis University. I've also published research on "Inspecting CNN and ANN Algorithms using Digit Recognition Model" (IRJET 2020). My research interests include privacy-preserving ML, ethical AI development, and secure deployment of LLMs in production environments.`,
+    'contact': `You can reach me at navyasreechoudhary@gmail.com. I'm also available on LinkedIn at navya-sree-yellina. I'm based in Saint Louis, MO and am actively seeking opportunities in Generative AI and MLOps roles. Feel free to reach out to discuss potential opportunities or collaborations!`,
     'salary': `Based on my experience with enterprise AI solutions and proven track record of delivering 40% performance improvements, I'm looking for competitive compensation aligned with senior Generative AI Engineer roles. I'm open to discussing specific numbers based on the role, responsibilities, and total compensation package.`,
     'location': `I'm currently based in Saint Louis, MO. I'm open to both local opportunities and remote positions. For the right opportunity, I'm also willing to consider relocation within the United States.`,
     'availability': `I'm actively seeking new opportunities and can start with standard notice period. I'm particularly interested in roles focusing on Generative AI, LLMs, and MLOps where I can leverage my expertise in transformers and enterprise-scale AI solutions.`,
@@ -218,6 +225,8 @@ function getFallbackResponse(message: string) {
     response = `I'm currently working as a Generative AI Engineer at Gemini Consulting & Services (Jan 2025-Present), where I've architected enterprise AI platforms, implemented RAG frameworks, and established MLOps pipelines. Previously, I worked at Oracle Cerner as a Systems Engineer (2021-2023) building ML monitoring systems and ETL pipelines, and interned at Televerge Communications optimizing backend systems.`;
   } else if (lowerMessage.includes('skills') || lowerMessage.includes('technologies')) {
     response = `My technical expertise spans: Generative AI & Deep Learning (Transformers like GPT, BERT, T5, LLMs, OpenAI API, LangChain, RAG), ML Frameworks (PyTorch, TensorFlow, Hugging Face), Cloud & MLOps (AWS SageMaker, Azure ML, Docker, Kubernetes, CI/CD), and Programming (Python, SQL, JavaScript, Java, FastAPI, React). I also specialize in ethical AI development, privacy-preserving ML, and have strong research capabilities.`;
+  } else if (lowerMessage.includes('contact') || lowerMessage.includes('email') || lowerMessage.includes('reach')) {
+    response = `You can reach me at navyasreechoudhary@gmail.com. I'm also available on LinkedIn at navya-sree-yellina. I'm based in Saint Louis, MO and am actively seeking opportunities in Generative AI and MLOps roles. Feel free to reach out to discuss potential opportunities or collaborations!`;
   } else {
     response = `I'd be happy to help you learn more about my experience! You can ask me about my work with generative AI and transformers, MLOps implementations, specific projects at Gemini Consulting or Oracle Cerner, my research on privacy-preserving ML, technical skills, or career opportunities. What specific aspect of my background would you like to explore?`;
   }
