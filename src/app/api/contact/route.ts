@@ -14,11 +14,10 @@ try {
 // Initialize Resend if API key is available
 const resend = process.env.RESEND_API_KEY && Resend ? new Resend(process.env.RESEND_API_KEY) : null;
 
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!
-);
+// Initialize Supabase client (optional - only if environment variables are set)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 // Initialize Nodemailer for email sending
 const createNodemailerTransporter = () => {
@@ -158,35 +157,39 @@ export async function POST(request: NextRequest) {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
     body.ip = ip;
 
-    // Save contact to Supabase
+    // Save contact to Supabase (if configured)
     let contactId: string | null = null;
     let autoReplySent = false;
     
-    try {
-      const { data: contactData, error: dbError } = await supabase
-        .from('contacts')
-        .insert({
-          name,
-          email,
-          company: body.company,
-          inquiry_type: inquiryType,
-          urgency: body.urgency,
-          message,
-          technologies_of_interest: body.technologiesOfInterest,
-          ip_address: ip,
-          auto_reply_sent: false
-        })
-        .select()
-        .single();
+    if (supabase) {
+      try {
+        const { data: contactData, error: dbError } = await supabase
+          .from('contacts')
+          .insert({
+            name,
+            email,
+            company: body.company,
+            inquiry_type: inquiryType,
+            urgency: body.urgency,
+            message,
+            technologies_of_interest: body.technologiesOfInterest,
+            ip_address: ip,
+            auto_reply_sent: false
+          })
+          .select()
+          .single();
 
-      if (dbError) {
-        console.error('Error saving contact to database:', dbError);
-      } else {
-        contactId = contactData.id;
-        console.log(`Contact saved to database with ID: ${contactId}`);
+        if (dbError) {
+          console.error('Error saving contact to database:', dbError);
+        } else {
+          contactId = contactData.id;
+          console.log(`Contact saved to database with ID: ${contactId}`);
+        }
+      } catch (dbErr) {
+        console.error('Database error:', dbErr);
       }
-    } catch (dbErr) {
-      console.error('Database error:', dbErr);
+    } else {
+      console.log('Supabase not configured - contact not saved to database');
     }
 
     // Send email notification
@@ -263,7 +266,7 @@ export async function POST(request: NextRequest) {
             console.log(`Auto-reply sent successfully to ${email}`);
             
             // Update database to mark auto-reply as sent
-            if (contactId) {
+            if (contactId && supabase) {
               await supabase
                 .from('contacts')
                 .update({ 
