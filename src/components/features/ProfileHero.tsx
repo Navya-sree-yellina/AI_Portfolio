@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Mail, Download, MapPin, Briefcase } from 'lucide-react';
+import Link from 'next/link';
 
 interface ProfileHeroProps {
   profile?: {
@@ -101,13 +102,13 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <a
+              <Link
                 href="/contact"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
               >
                 <Mail className="w-5 h-5" />
                 Get In Touch
-              </a>
+              </Link>
             </motion.div>
 
             {data.resumePdfUrl && (
@@ -115,14 +116,20 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                <a
-                  href={data.resumePdfUrl}
-                  download
+                <button
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = data.resumePdfUrl;
+                    link.download = 'NavyaSreeYellina_Resume.pdf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-lg font-semibold border-2 border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <Download className="w-5 h-5" />
                   Download Resume
-                </a>
+                </button>
               </motion.div>
             )}
 
