@@ -118,12 +118,14 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
               >
                 <button
                   onClick={() => {
-                    const link = document.createElement('a');
-                    link.href = data.resumePdfUrl;
-                    link.download = 'NavyaSreeYellina_Resume.pdf';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    if (data.resumePdfUrl) {
+                      const link = document.createElement('a');
+                      link.href = data.resumePdfUrl;
+                      link.download = 'NavyaSreeYellina_Resume.pdf';
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }
                   }}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-lg font-semibold border-2 border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
                 >
