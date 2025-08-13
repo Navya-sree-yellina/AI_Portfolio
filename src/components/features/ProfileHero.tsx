@@ -102,7 +102,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
               whileTap={{ scale: 0.95 }}
             >
               <a
-                href="#contact"
+                href="/contact"
                 className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
               >
                 <Mail className="w-5 h-5" />
@@ -117,7 +117,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
               >
                 <a
                   href={data.resumePdfUrl}
-                  download="NavyaSreeYellina_Resume.pdf"
+                  download
                   className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-lg font-semibold border-2 border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <Download className="w-5 h-5" />
