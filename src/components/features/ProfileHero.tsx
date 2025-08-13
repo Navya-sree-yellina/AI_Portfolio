@@ -101,10 +101,12 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
             <motion.div
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
+              className="inline-block"
             >
               <Link
                 href="/contact"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
+                style={{ pointerEvents: 'auto', position: 'relative', zIndex: 10 }}
               >
                 <Mail className="w-5 h-5" />
                 Get In Touch
