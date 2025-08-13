@@ -1,6 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
+// Check if Resend is available
+let Resend: any;
+try {
+  const resendModule = require('resend');
+  Resend = resendModule.Resend;
+} catch (error) {
+  console.log('Resend package not installed, using nodemailer');
+}
+
+// Initialize Resend if API key is available
+const resend = process.env.RESEND_API_KEY && Resend ? new Resend(process.env.RESEND_API_KEY) : null;
+
 // Initialize Nodemailer for email sending
 const createNodemailerTransporter = () => {
   if (process.env.EMAIL_SERVICE === 'gmail') {
@@ -139,104 +151,170 @@ export async function POST(request: NextRequest) {
     const ip = request.headers.get('x-forwarded-for') || 'unknown';
     body.ip = ip;
 
-    // Check if email configuration exists
-    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
-      console.error('Email configuration missing. Please set EMAIL_USER and EMAIL_PASS in .env.local');
-      
-      // Log the submission to console as fallback
-      console.log('=== NEW CONTACT FORM SUBMISSION ===');
-      console.log(createEmailText(body));
-      console.log('===================================');
-      
-      return NextResponse.json({
-        success: true,
-        message: 'Thank you for your message. I\'ll get back to you within 24 hours!',
-        warning: 'Email service not configured, but your message has been logged.'
-      });
-    }
-
     // Send email notification
     let emailSent = false;
     const emailTo = process.env.CONTACT_EMAIL_TO || 'navyasreechoudhary@gmail.com';
     
-    try {
-      const transporter = createNodemailerTransporter();
-      
-      await transporter.sendMail({
-        from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
-        to: emailTo,
-        replyTo: email, // Set reply-to as the sender's email
-        subject: `New ${inquiryType || 'Contact'} Inquiry from ${name}`,
-        text: createEmailText(body),
-        html: createEmailHTML(body),
-      });
-      
-      emailSent = true;
-      console.log(`Email sent successfully to ${emailTo}`);
-      
-      // Send auto-reply to the user
+    // Try Resend first if available
+    if (resend) {
       try {
-        const autoReplyHTML = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <style>
-                body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
-                .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-                .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px 10px 0 0; text-align: center; }
-                .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
-                .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <div class="header">
-                    <h2 style="margin: 0;">Thank You for Reaching Out!</h2>
-                </div>
-                <div class="content">
-                    <p>Hi ${name},</p>
-                    <p>Thank you for your interest! I've received your message and will get back to you within 24 hours.</p>
-                    <p>In the meantime, feel free to:</p>
-                    <ul>
-                        <li>Browse my projects to see my work</li>
-                        <li>Visit my blog for technical insights</li>
-                        <li>Connect on LinkedIn</li>
-                    </ul>
-                    <p>Looking forward to discussing how I can help with your ${inquiryType === 'recruitment' ? 'opportunity' : inquiryType === 'consultation' ? 'project' : 'inquiry'}!</p>
-                    <p>Best regards,<br>Navya Sree Yellina</p>
-                </div>
-            </div>
-        </body>
-        </html>
-        `;
+        console.log('Attempting to send email via Resend...');
+        
+        const { data, error } = await resend.emails.send({
+          from: 'Portfolio Contact <onboarding@resend.dev>',
+          to: emailTo,
+          subject: `New ${inquiryType || 'Contact'} Inquiry from ${name}`,
+          reply_to: email,
+          html: createEmailHTML(body),
+          text: createEmailText(body),
+        });
 
+        if (error) {
+          console.error('Resend error:', error);
+          throw error;
+        }
+
+        emailSent = true;
+        console.log(`Email sent successfully via Resend to ${emailTo}`);
+        
+        // Send auto-reply
+        try {
+          const autoReplyHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <style>
+                  body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
+                  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                  .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px 10px 0 0; text-align: center; }
+                  .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <div class="header">
+                      <h2 style="margin: 0;">Thank You for Reaching Out!</h2>
+                  </div>
+                  <div class="content">
+                      <p>Hi ${name},</p>
+                      <p>Thank you for your interest! I've received your message and will get back to you within 24 hours.</p>
+                      <p>In the meantime, feel free to:</p>
+                      <ul>
+                          <li>Browse my projects to see my work</li>
+                          <li>Visit my blog for technical insights</li>
+                          <li>Connect on LinkedIn</li>
+                      </ul>
+                      <p>Looking forward to discussing how I can help with your ${inquiryType === 'recruitment' ? 'opportunity' : inquiryType === 'consultation' ? 'project' : 'inquiry'}!</p>
+                      <p>Best regards,<br>Navya Sree Yellina</p>
+                  </div>
+              </div>
+          </body>
+          </html>
+          `;
+
+          await resend.emails.send({
+            from: 'Navya Sree <onboarding@resend.dev>',
+            to: email,
+            subject: 'Thank you for your message!',
+            html: autoReplyHTML,
+          });
+          
+          console.log(`Auto-reply sent via Resend to ${email}`);
+        } catch (autoReplyError) {
+          console.error('Auto-reply error:', autoReplyError);
+        }
+        
+      } catch (resendError: any) {
+        console.error('Resend failed:', resendError);
+        // Fall back to nodemailer
+      }
+    }
+    
+    // If Resend didn't work or isn't configured, try nodemailer
+    if (!emailSent && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+      try {
+        console.log('Attempting to send email via Nodemailer...');
+        const transporter = createNodemailerTransporter();
+        
         await transporter.sendMail({
-          from: `"Navya Sree Yellina" <${process.env.EMAIL_USER}>`,
-          to: email,
-          subject: 'Thank you for your message!',
-          html: autoReplyHTML,
+          from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
+          to: emailTo,
+          replyTo: email,
+          subject: `New ${inquiryType || 'Contact'} Inquiry from ${name}`,
+          text: createEmailText(body),
+          html: createEmailHTML(body),
         });
         
-        console.log(`Auto-reply sent to ${email}`);
-      } catch (autoReplyError) {
-        console.error('Auto-reply error:', autoReplyError);
-        // Continue even if auto-reply fails
+        emailSent = true;
+        console.log(`Email sent successfully via Nodemailer to ${emailTo}`);
+        
+        // Send auto-reply
+        try {
+          const autoReplyHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <style>
+                  body { font-family: 'Arial', sans-serif; line-height: 1.6; color: #333; }
+                  .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                  .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 10px 10px 0 0; text-align: center; }
+                  .content { background: #f8f9fa; padding: 30px; border-radius: 0 0 10px 10px; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <div class="header">
+                      <h2 style="margin: 0;">Thank You for Reaching Out!</h2>
+                  </div>
+                  <div class="content">
+                      <p>Hi ${name},</p>
+                      <p>Thank you for your interest! I've received your message and will get back to you within 24 hours.</p>
+                      <p>In the meantime, feel free to browse my projects and blog.</p>
+                      <p>Best regards,<br>Navya Sree Yellina</p>
+                  </div>
+              </div>
+          </body>
+          </html>
+          `;
+
+          await transporter.sendMail({
+            from: `"Navya Sree Yellina" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: 'Thank you for your message!',
+            html: autoReplyHTML,
+          });
+          
+          console.log(`Auto-reply sent via Nodemailer to ${email}`);
+        } catch (autoReplyError) {
+          console.error('Auto-reply error:', autoReplyError);
+        }
+        
+      } catch (nodemailerError: any) {
+        console.error('Nodemailer failed:', nodemailerError);
       }
+    }
+    
+    // If no email was sent, log to console
+    if (!emailSent) {
+      console.error('\n================================================');
+      console.error('EMAIL CONFIGURATION MISSING!');
+      console.error('To enable email sending, you need to either:');
+      console.error('1. Add a Resend API key (free at resend.com):');
+      console.error('   RESEND_API_KEY=re_xxxxxxxxxxxxx');
+      console.error('2. Configure Gmail with app password:');
+      console.error('   EMAIL_SERVICE=gmail');
+      console.error('   EMAIL_USER=your-email@gmail.com');
+      console.error('   EMAIL_PASS=your-app-password');
+      console.error('================================================\n');
       
-    } catch (emailError: any) {
-      console.error('Email sending error:', emailError);
-      
-      // Log the submission as fallback
-      console.log('=== NEW CONTACT FORM SUBMISSION (Email Failed) ===');
+      console.log('=== NEW CONTACT FORM SUBMISSION (Email Not Sent) ===');
       console.log(createEmailText(body));
-      console.log('Error:', emailError.message);
-      console.log('=================================================');
+      console.log('====================================================');
       
       return NextResponse.json({
         success: true,
         message: 'Thank you for your message. I\'ll get back to you within 24 hours!',
-        warning: 'Email delivery issue, but your message has been recorded.',
-        debugInfo: process.env.NODE_ENV === 'development' ? emailError.message : undefined
+        warning: 'Email service not configured. To receive contact form submissions, please set up Resend or Gmail in .env.local'
       });
     }
 
