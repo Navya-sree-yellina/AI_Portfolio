@@ -43,11 +43,16 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
   const data = profile || defaultProfile;
 
   return (
-    <section className="relative min-h-[70vh] flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 sm:px-6 lg:px-8">
+    <section className="relative min-h-[90vh] flex items-center justify-center bg-gradient-to-br from-indigo-50 via-white to-blue-50 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
       
-      <div className="max-w-7xl mx-auto w-full py-20">
+      {/* Decorative Elements */}
+      <div className="absolute top-20 left-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+      <div className="absolute top-40 right-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+      <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+      
+      <div className="max-w-7xl mx-auto w-full py-12 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -55,30 +60,50 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
           className="text-center"
         >
           {/* Name and Title */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-gray-900 mb-4">
+          <motion.h1 
+            className="text-5xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             {data.fullName}
-          </h1>
+          </motion.h1>
           
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl text-blue-600 font-semibold mb-6">
+          <motion.h2 
+            className="text-xl sm:text-2xl lg:text-3xl text-indigo-600 font-medium mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
             {data.title}
-          </h2>
+          </motion.h2>
 
           {/* Bio */}
-          <p className="max-w-3xl mx-auto text-lg sm:text-xl text-gray-700 mb-8 leading-relaxed">
+          <motion.p 
+            className="max-w-4xl mx-auto text-base sm:text-lg text-gray-600 mb-10 leading-relaxed px-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
             {data.bio}
-          </p>
+          </motion.p>
 
           {/* Quick Info */}
-          <div className="flex flex-wrap justify-center gap-6 mb-8 text-gray-600">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-5 h-5" />
-              <span>{data.location}</span>
+          <motion.div 
+            className="flex flex-wrap justify-center gap-6 mb-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <div className="flex items-center gap-2 text-gray-600">
+              <MapPin className="w-5 h-5 text-indigo-500" />
+              <span className="font-medium">{data.location}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Briefcase className="w-5 h-5" />
-              <span>{data.yearsExperience}+ Years Experience</span>
+            <div className="flex items-center gap-2 text-gray-600">
+              <Briefcase className="w-5 h-5 text-indigo-500" />
+              <span className="font-medium">{data.yearsExperience}+ Years Experience</span>
             </div>
-          </div>
+          </motion.div>
 
           {/* Specializations */}
           <div className="flex flex-wrap justify-center gap-3 mb-10">
@@ -88,7 +113,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.1 }}
-                className="px-4 py-2 bg-white/80 backdrop-blur-sm rounded-full text-sm font-medium text-gray-700 shadow-sm border border-gray-200"
+                className="px-4 py-2 bg-white/90 backdrop-blur-sm rounded-full text-sm font-medium text-gray-700 shadow-md border border-gray-100 hover:shadow-lg hover:scale-105 transition-all duration-200"
               >
                 {spec}
               </motion.span>
@@ -106,7 +131,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
               }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 cursor-pointer shadow-md hover:shadow-xl"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-indigo-600 to-blue-600 text-white rounded-full font-semibold transition-all duration-200 cursor-pointer shadow-lg hover:shadow-2xl"
             >
               <Mail className="w-5 h-5" />
               Get In Touch
@@ -131,7 +156,7 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
                     document.body.removeChild(link);
                   }
                 }}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-lg font-semibold border-2 border-gray-300 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 cursor-pointer shadow-md hover:shadow-xl"
+                className="inline-flex items-center gap-2 px-8 py-4 bg-white text-gray-700 rounded-full font-semibold border-2 border-gray-200 hover:border-indigo-400 hover:bg-indigo-50 hover:text-indigo-700 transition-all duration-200 cursor-pointer shadow-lg hover:shadow-2xl"
               >
                 <Download className="w-5 h-5" />
                 Download Resume
