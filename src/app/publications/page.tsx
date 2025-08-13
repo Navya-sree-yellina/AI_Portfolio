@@ -70,21 +70,6 @@ const researchInterests = [
   },
 ];
 
-const achievements = [
-  {
-    title: 'Women Entrepreneur of the Year',
-    year: '2018',
-    description: 'Recognized for driving business innovation and growth through technology leadership.',
-    icon: Award,
-  },
-  {
-    title: 'Employee of the Month',
-    organization: 'Oracle Cerner',
-    description: 'Awarded for reducing high-risk production incidents by 30% through systematic process auditing.',
-    icon: Award,
-  },
-];
-
 export default function PublicationsPage() {
   return (
     <div className="min-h-screen py-20">
@@ -259,52 +244,6 @@ export default function PublicationsPage() {
                       {topic}
                     </span>
                   ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Achievements Section */}
-      <section className="px-4 sm:px-6 lg:px-8 py-20">
-        <div className="max-w-7xl mx-auto">
-          <motion.h2
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl font-bold text-gray-900 mb-8"
-          >
-            Recognition & Achievements
-          </motion.h2>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {achievements.map((achievement, index) => (
-              <motion.div
-                key={achievement.title}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-100"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm">
-                    <achievement.icon className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-1">
-                      {achievement.title}
-                    </h3>
-                    {achievement.year && (
-                      <p className="text-sm text-gray-600 mb-2">{achievement.year}</p>
-                    )}
-                    {achievement.organization && (
-                      <p className="text-sm text-gray-600 mb-2">{achievement.organization}</p>
-                    )}
-                    <p className="text-gray-700">{achievement.description}</p>
-                  </div>
                 </div>
               </motion.div>
             ))}
