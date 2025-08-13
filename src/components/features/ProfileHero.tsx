@@ -99,36 +99,43 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
           <div className="flex flex-wrap justify-center gap-4">
             <motion.a
               href="/contact"
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ 
+                scale: 1.08,
+                boxShadow: "0 10px 25px rgba(59, 130, 246, 0.4)",
+                y: -2
+              }}
               whileTap={{ scale: 0.95 }}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
+              transition={{ type: "spring", stiffness: 300 }}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all duration-200 cursor-pointer shadow-md hover:shadow-xl"
             >
               <Mail className="w-5 h-5" />
               Get In Touch
             </motion.a>
 
             {data.resumePdfUrl && (
-              <motion.div
-                whileHover={{ scale: 1.05 }}
+              <motion.button
+                whileHover={{ 
+                  scale: 1.08,
+                  boxShadow: "0 10px 25px rgba(0, 0, 0, 0.15)",
+                  y: -2
+                }}
                 whileTap={{ scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 300 }}
+                onClick={() => {
+                  if (data.resumePdfUrl) {
+                    const link = document.createElement('a');
+                    link.href = data.resumePdfUrl;
+                    link.download = 'NavyaSreeYellina_Resume.pdf';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }
+                }}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-lg font-semibold border-2 border-gray-300 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 cursor-pointer shadow-md hover:shadow-xl"
               >
-                <button
-                  onClick={() => {
-                    if (data.resumePdfUrl) {
-                      const link = document.createElement('a');
-                      link.href = data.resumePdfUrl;
-                      link.download = 'NavyaSreeYellina_Resume.pdf';
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                    }
-                  }}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 rounded-lg font-semibold border-2 border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
-                >
-                  <Download className="w-5 h-5" />
-                  Download Resume
-                </button>
-              </motion.div>
+                <Download className="w-5 h-5" />
+                Download Resume
+              </motion.button>
             )}
 
           </div>
