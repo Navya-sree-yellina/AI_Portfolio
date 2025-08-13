@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion';
 import { Mail, Download, MapPin, Briefcase } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 
 interface ProfileHeroProps {
   profile?: {
@@ -20,8 +19,6 @@ interface ProfileHeroProps {
 }
 
 export default function ProfileHero({ profile }: ProfileHeroProps) {
-  const router = useRouter();
-  
   // Default profile data for initial development
   const defaultProfile = {
     fullName: "Navya Sree Yellina",
@@ -100,19 +97,15 @@ export default function ProfileHero({ profile }: ProfileHeroProps) {
 
           {/* CTA Buttons */}
           <div className="flex flex-wrap justify-center gap-4">
-            <motion.div
+            <motion.a
+              href="/contact"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="inline-block"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
             >
-              <button
-                onClick={() => router.push('/contact')}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors cursor-pointer"
-              >
-                <Mail className="w-5 h-5" />
-                Get In Touch
-              </button>
-            </motion.div>
+              <Mail className="w-5 h-5" />
+              Get In Touch
+            </motion.a>
 
             {data.resumePdfUrl && (
               <motion.div
