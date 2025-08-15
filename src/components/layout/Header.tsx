@@ -65,27 +65,27 @@ export default function Header() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           mounted && (isScrolled || isMobileMenuOpen)
-            ? 'bg-white/95 backdrop-blur-md shadow-md'
-            : 'bg-transparent'
+            ? 'bg-white backdrop-blur-md shadow-md'
+            : 'bg-white md:bg-transparent'
         }`}
       >
         <nav className="relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16 md:h-20">
               {/* Logo - Responsive sizing */}
-              <Link href="/" className="flex items-center gap-2 sm:gap-3 group z-50">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center border border-blue-100 group-hover:from-blue-100 group-hover:to-purple-100 transition-all duration-300">
+              <Link href="/" className="flex items-center gap-2 group relative z-10">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center border border-blue-100 group-hover:from-blue-100 group-hover:to-purple-100 transition-all duration-300">
                   <Image
                     src="/nsy-logo.png"
                     alt="Navya Sree Yellina"
-                    width={36}
-                    height={36}
-                    className="rounded w-7 h-7 sm:w-9 sm:h-9"
+                    width={32}
+                    height={32}
+                    className="rounded w-7 h-7"
                     priority
                     style={{ backgroundColor: 'transparent' }}
                   />
                 </div>
-                <span className="font-bold text-lg sm:text-xl text-gray-900 group-hover:text-blue-600 transition-colors">
+                <span className="font-bold text-base sm:text-lg text-gray-900 group-hover:text-blue-600 transition-colors">
                   Navya Sree
                 </span>
               </Link>
@@ -152,8 +152,9 @@ export default function Header() {
               {/* Mobile/Tablet Menu Button */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden relative z-50 p-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-all"
+                className="lg:hidden relative z-10 p-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-all"
                 aria-label="Toggle menu"
+                type="button"
               >
                 <AnimatePresence mode="wait">
                   {isMobileMenuOpen ? (
@@ -202,7 +203,7 @@ export default function Header() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: '100%' }}
                   transition={{ type: 'tween', duration: 0.3 }}
-                  className="lg:hidden fixed top-0 right-0 bottom-0 w-full sm:w-80 md:w-96 bg-white shadow-xl z-40 overflow-y-auto"
+                  className="lg:hidden fixed top-0 right-0 bottom-0 w-[75%] sm:w-80 md:w-96 bg-white shadow-xl z-40 overflow-y-auto"
                 >
                   {/* Menu Header */}
                   <div className="sticky top-0 bg-white border-b border-gray-100 px-4 py-4 flex items-center justify-between">

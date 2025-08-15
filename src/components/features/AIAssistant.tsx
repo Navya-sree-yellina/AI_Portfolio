@@ -113,9 +113,9 @@ export default function AIAssistant() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
             onClick={() => setIsOpen(true)}
-            className="fixed bottom-6 right-6 p-4 bg-blue-600 text-white rounded-full shadow-xl hover:bg-blue-700 transition-colors z-50"
+            className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 p-3 sm:p-4 bg-blue-600 text-white rounded-full shadow-xl hover:bg-blue-700 transition-colors z-40"
           >
-            <MessageCircle className="w-6 h-6" />
+            <MessageCircle className="w-5 h-5 sm:w-6 sm:h-6" />
           </motion.button>
         )}
       </AnimatePresence>
@@ -128,20 +128,20 @@ export default function AIAssistant() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-6 right-6 w-96 h-[600px] bg-white rounded-xl shadow-2xl flex flex-col z-50"
+            className="fixed inset-0 sm:inset-auto sm:bottom-6 sm:right-6 sm:w-96 sm:h-[600px] bg-white sm:rounded-xl shadow-2xl flex flex-col z-40"
           >
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b bg-blue-600 text-white rounded-t-xl">
-              <div className="flex items-center gap-3">
-                <Bot className="w-6 h-6" />
+            <div className="flex items-center justify-between p-3 sm:p-4 border-b bg-blue-600 text-white sm:rounded-t-xl">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Bot className="w-5 h-5 sm:w-6 sm:h-6" />
                 <div>
-                  <h3 className="font-semibold">Navya's Personal Assistant</h3>
-                  <p className="text-xs opacity-90">Ask anything about my experience!</p>
+                  <h3 className="font-semibold text-sm sm:text-base">Navya's Assistant</h3>
+                  <p className="text-xs opacity-90 hidden sm:block">Ask anything about my experience!</p>
                 </div>
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="p-1 hover:bg-blue-700 rounded transition-colors"
+                className="p-1.5 sm:p-1 hover:bg-blue-700 rounded transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
