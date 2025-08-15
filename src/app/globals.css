@@ -95,6 +95,22 @@ html, body {
     padding-left: 1rem;
     padding-right: 1rem;
   }
+  
+  /* Prevent iOS zoom on input focus */
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Safe area support for notched devices */
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
 }
 
 /* Blob animations */
