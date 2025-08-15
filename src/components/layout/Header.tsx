@@ -37,119 +37,235 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
+
   const isActive = (href: string) => {
     if (href === '/') return pathname === href;
     return pathname.startsWith(href);
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-        mounted && isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-md'
-          : 'bg-transparent'
-      }`}
-    >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center border border-blue-100 group-hover:from-blue-100 group-hover:to-purple-100 transition-all duration-300">
-              <Image
-                src="/nsy-logo.png"
-                alt="Navya Sree Yellina"
-                width={36}
-                height={36}
-                className="rounded"
-                priority
-                style={{ backgroundColor: 'transparent' }}
-              />
-            </div>
-            <span className="font-bold text-xl text-gray-900 group-hover:text-blue-600 transition-colors">
-              Navya Sree
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`font-medium transition-colors ${
-                  isActive(item.href)
-                    ? 'text-blue-600'
-                    : 'text-gray-700 hover:text-blue-600'
-                }`}
-              >
-                {item.name}
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+          mounted && (isScrolled || isMobileMenuOpen)
+            ? 'bg-white/95 backdrop-blur-md shadow-md'
+            : 'bg-transparent'
+        }`}
+      >
+        <nav className="relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16 md:h-20">
+              {/* Logo - Responsive sizing */}
+              <Link href="/" className="flex items-center gap-2 sm:gap-3 group z-50">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center border border-blue-100 group-hover:from-blue-100 group-hover:to-purple-100 transition-all duration-300">
+                  <Image
+                    src="/nsy-logo.png"
+                    alt="Navya Sree Yellina"
+                    width={36}
+                    height={36}
+                    className="rounded w-7 h-7 sm:w-9 sm:h-9"
+                    priority
+                    style={{ backgroundColor: 'transparent' }}
+                  />
+                </div>
+                <span className="font-bold text-lg sm:text-xl text-gray-900 group-hover:text-blue-600 transition-colors">
+                  Navya Sree
+                </span>
               </Link>
-            ))}
-            
-            {/* Resume Download Button */}
-            <a
-              href="/resume.pdf"
-              download
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
-            >
-              <Download className="w-4 h-4" />
-              Resume
-            </a>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-gray-700 hover:text-blue-600 transition-colors"
-          >
-            {isMobileMenuOpen ? (
-              <X className="w-6 h-6" />
-            ) : (
-              <Menu className="w-6 h-6" />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden overflow-hidden"
-            >
-              <div className="py-4 space-y-2">
+              {/* Desktop Navigation - Adjusted for larger tablets */}
+              <div className="hidden lg:flex items-center gap-4 xl:gap-6">
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`block px-4 py-2 font-medium rounded-lg transition-colors ${
+                    className={`font-medium text-sm xl:text-base transition-colors ${
                       isActive(item.href)
-                        ? 'bg-blue-50 text-blue-600'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'text-blue-600'
+                        : 'text-gray-700 hover:text-blue-600'
                     }`}
                   >
                     {item.name}
                   </Link>
                 ))}
                 
-                {/* Mobile Resume Button */}
+                {/* Resume Download Button */}
                 <a
                   href="/resume.pdf"
                   download
-                  className="flex items-center justify-center gap-2 mx-4 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium"
+                  className="flex items-center gap-2 px-3 py-2 xl:px-4 bg-blue-600 text-white rounded-lg font-medium text-sm xl:text-base hover:bg-blue-700 transition-colors"
                 >
                   <Download className="w-4 h-4" />
-                  Download Resume
+                  Resume
                 </a>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </nav>
-    </header>
+
+              {/* Tablet Navigation (simplified) */}
+              <div className="hidden md:flex lg:hidden items-center gap-3">
+                <Link
+                  href="/projects"
+                  className={`font-medium text-sm transition-colors ${
+                    isActive('/projects')
+                      ? 'text-blue-600'
+                      : 'text-gray-700 hover:text-blue-600'
+                  }`}
+                >
+                  Projects
+                </Link>
+                <Link
+                  href="/experience"
+                  className={`font-medium text-sm transition-colors ${
+                    isActive('/experience')
+                      ? 'text-blue-600'
+                      : 'text-gray-700 hover:text-blue-600'
+                  }`}
+                >
+                  Experience
+                </Link>
+                <a
+                  href="/resume.pdf"
+                  download
+                  className="flex items-center gap-2 px-3 py-1.5 bg-blue-600 text-white rounded-lg font-medium text-sm hover:bg-blue-700 transition-colors"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  Resume
+                </a>
+              </div>
+
+              {/* Mobile/Tablet Menu Button */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="lg:hidden relative z-50 p-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-all"
+                aria-label="Toggle menu"
+              >
+                <AnimatePresence mode="wait">
+                  {isMobileMenuOpen ? (
+                    <motion.div
+                      key="close"
+                      initial={{ rotate: -90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <X className="w-6 h-6" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="menu"
+                      initial={{ rotate: 90, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: -90, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Menu className="w-6 h-6" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile/Tablet Full Menu */}
+          <AnimatePresence>
+            {isMobileMenuOpen && (
+              <>
+                {/* Backdrop */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="lg:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                />
+                
+                {/* Menu Panel */}
+                <motion.div
+                  initial={{ opacity: 0, x: '100%' }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: '100%' }}
+                  transition={{ type: 'tween', duration: 0.3 }}
+                  className="lg:hidden fixed top-0 right-0 bottom-0 w-full sm:w-80 md:w-96 bg-white shadow-xl z-40 overflow-y-auto"
+                >
+                  {/* Menu Header */}
+                  <div className="sticky top-0 bg-white border-b border-gray-100 px-4 py-4 flex items-center justify-between">
+                    <span className="font-bold text-lg text-gray-900">Menu</span>
+                    <button
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                      aria-label="Close menu"
+                    >
+                      <X className="w-5 h-5 text-gray-600" />
+                    </button>
+                  </div>
+                  
+                  {/* Menu Items */}
+                  <div className="px-4 py-6 space-y-1">
+                    {navigation.map((item, index) => (
+                      <motion.div
+                        key={item.name}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                      >
+                        <Link
+                          href={item.href}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                          className={`block px-4 py-3 font-medium rounded-lg transition-all ${
+                            isActive(item.href)
+                              ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600'
+                              : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
+                          }`}
+                        >
+                          {item.name}
+                        </Link>
+                      </motion.div>
+                    ))}
+                    
+                    {/* Mobile Resume Button */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: navigation.length * 0.05 }}
+                      className="pt-6"
+                    >
+                      <a
+                        href="/resume.pdf"
+                        download
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                      >
+                        <Download className="w-4 h-4" />
+                        Download Resume
+                      </a>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </>
+            )}
+          </AnimatePresence>
+        </nav>
+      </header>
+      
+      {/* Spacer for fixed header */}
+      <div className="h-16 md:h-20" />
+    </>
   );
 }

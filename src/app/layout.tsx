@@ -11,6 +11,11 @@ export const metadata: Metadata = {
   description: "Hi! I'm Navya - I build AI that understands people. From RAG systems to privacy-preserving ML, I'm passionate about making technology work for everyone.",
   keywords: "Generative AI, MLOps, Machine Learning, AI Engineer, RAG, LangChain, Privacy-Preserving ML",
   authors: [{ name: "Navya Sree Yellina" }],
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+  },
   icons: {
     icon: '/nsy-logo.png',
     shortcut: '/favicon.png',
@@ -55,9 +60,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} antialiased bg-gray-50 text-gray-900`}>
+      <body className={`${inter.className} antialiased bg-gray-50 text-gray-900 min-h-screen`}>
         <Header />
-        <main className="pt-16">
+        <main className="min-h-screen">
           {children}
         </main>
         <Footer />
