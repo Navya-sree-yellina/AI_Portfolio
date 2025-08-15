@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Menu, X, Download, Home, Briefcase, Code, 
   FolderOpen, BookOpen, FileText, User, Mail 
@@ -33,9 +32,7 @@ export default function Header() {
       setIsScrolled(window.scrollY > 10);
     };
     
-    // Check initial scroll position
     handleScroll();
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -49,18 +46,29 @@ export default function Header() {
   useEffect(() => {
     if (isMobileMenuOpen) {
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     }
     
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
     };
   }, [isMobileMenuOpen]);
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === href;
     return pathname.startsWith(href);
+  };
+
+  const toggleMenu = () => {
+    console.log('Menu toggled:', !isMobileMenuOpen); // Debug log
+    setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
   return (
@@ -75,7 +83,7 @@ export default function Header() {
         <nav className="relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between h-16 md:h-20">
-              {/* Logo - Responsive sizing */}
+              {/* Logo */}
               <Link href="/" className="flex items-center gap-2 group relative z-10">
                 <div className="w-8 h-8 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg flex items-center justify-center border border-blue-100 group-hover:from-blue-100 group-hover:to-purple-100 transition-all duration-300">
                   <Image
@@ -93,7 +101,7 @@ export default function Header() {
                 </span>
               </Link>
 
-              {/* Desktop Navigation - Adjusted for larger tablets */}
+              {/* Desktop Navigation */}
               <div className="hidden lg:flex items-center gap-4 xl:gap-6">
                 {navigation.map((item) => (
                   <Link
@@ -152,163 +160,132 @@ export default function Header() {
                 </a>
               </div>
 
-              {/* Mobile/Tablet Menu Button */}
+              {/* Mobile Menu Button */}
               <button
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                onClick={toggleMenu}
                 className="lg:hidden relative z-10 p-2 rounded-lg text-gray-700 hover:text-blue-600 hover:bg-gray-100 transition-all"
                 aria-label="Toggle menu"
                 type="button"
               >
-                <AnimatePresence mode="wait">
-                  {isMobileMenuOpen ? (
-                    <motion.div
-                      key="close"
-                      initial={{ rotate: -90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: 90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <X className="w-6 h-6" />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="menu"
-                      initial={{ rotate: 90, opacity: 0 }}
-                      animate={{ rotate: 0, opacity: 1 }}
-                      exit={{ rotate: -90, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      <Menu className="w-6 h-6" />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {isMobileMenuOpen ? (
+                  <X className="w-6 h-6" />
+                ) : (
+                  <Menu className="w-6 h-6" />
+                )}
               </button>
             </div>
           </div>
-
-          {/* Mobile/Tablet Full Menu */}
-          <AnimatePresence>
-            {isMobileMenuOpen && (
-              <>
-                {/* Backdrop */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="lg:hidden fixed inset-0 bg-black/50 backdrop-blur-sm"
-                  style={{ zIndex: 998 }}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                />
-                
-                {/* Menu Panel */}
-                <motion.div
-                  initial={{ opacity: 0, x: '100%' }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: '100%' }}
-                  transition={{ type: 'tween', duration: 0.3 }}
-                  className="lg:hidden fixed top-0 right-0 bottom-0 w-[80%] sm:w-80 md:w-96 bg-white shadow-2xl overflow-y-auto"
-                  style={{ zIndex: 999 }}
-                >
-                  {/* Menu Header */}
-                  <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-4 flex items-center justify-between shadow-md">
-                    <div>
-                      <span className="font-bold text-lg">Navigation</span>
-                      <p className="text-xs opacity-90">Explore my portfolio</p>
-                    </div>
-                    <button
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="p-2 rounded-lg hover:bg-white/20 transition-colors"
-                      aria-label="Close menu"
-                    >
-                      <X className="w-5 h-5" />
-                    </button>
-                  </div>
-                  
-                  {/* Menu Items */}
-                  <div className="px-4 py-6">
-                    {/* Main Navigation */}
-                    <div className="space-y-1 mb-6">
-                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-4">Main Menu</p>
-                      {navigation.slice(0, 4).map((item, index) => {
-                        const Icon = item.icon;
-                        return (
-                          <motion.div
-                            key={item.name}
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.05 }}
-                          >
-                            <Link
-                              href={item.href}
-                              onClick={() => setIsMobileMenuOpen(false)}
-                              className={`flex items-center gap-3 px-4 py-3 font-medium rounded-lg transition-all ${
-                                isActive(item.href)
-                                  ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600'
-                                  : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
-                              }`}
-                            >
-                              <Icon className="w-5 h-5" />
-                              <span>{item.name}</span>
-                            </Link>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Additional Pages */}
-                    <div className="space-y-1 mb-6">
-                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-4">More</p>
-                      {navigation.slice(4).map((item, index) => {
-                        const Icon = item.icon;
-                        return (
-                          <motion.div
-                            key={item.name}
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: (index + 4) * 0.05 }}
-                          >
-                            <Link
-                              href={item.href}
-                              onClick={() => setIsMobileMenuOpen(false)}
-                              className={`flex items-center gap-3 px-4 py-3 font-medium rounded-lg transition-all ${
-                                isActive(item.href)
-                                  ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600'
-                                  : 'text-gray-700 hover:bg-gray-50 hover:text-blue-600'
-                              }`}
-                            >
-                              <Icon className="w-5 h-5" />
-                              <span>{item.name}</span>
-                            </Link>
-                          </motion.div>
-                        );
-                      })}
-                    </div>
-                    
-                    {/* Mobile Resume Button */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: navigation.length * 0.05 }}
-                      className="pt-4 border-t border-gray-200"
-                    >
-                      <a
-                        href="/resume.pdf"
-                        download
-                        onClick={() => setIsMobileMenuOpen(false)}
-                        className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium hover:from-blue-700 hover:to-indigo-700 transition-all shadow-md"
-                      >
-                        <Download className="w-4 h-4" />
-                        Download Resume
-                      </a>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>
         </nav>
       </header>
+
+      {/* Mobile Menu Overlay - Simple and Reliable */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 z-[60]"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          
+          {/* Menu Panel */}
+          <div className="fixed top-0 right-0 bottom-0 w-[85%] max-w-sm bg-white shadow-2xl z-[70] overflow-y-auto">
+            {/* Menu Header */}
+            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="font-bold text-lg">Navigation</h2>
+                  <p className="text-xs opacity-90">Explore my portfolio</p>
+                </div>
+                <button
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="p-2 rounded-lg hover:bg-white/20 transition-colors"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+
+            {/* Menu Content */}
+            <div className="p-4">
+              {/* Main Navigation */}
+              <div className="mb-6">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Main Menu</p>
+                <div className="space-y-2">
+                  {navigation.slice(0, 4).map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
+                          isActive(item.href)
+                            ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600'
+                            : 'text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span>{item.name}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Additional Pages */}
+              <div className="mb-6">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">More</p>
+                <div className="space-y-2">
+                  {navigation.slice(4).map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all ${
+                          isActive(item.href)
+                            ? 'bg-blue-50 text-blue-600 border-l-4 border-blue-600'
+                            : 'text-gray-700 hover:bg-gray-50'
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                        <span>{item.name}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Resume Download */}
+              <div className="pt-4 border-t border-gray-200">
+                <a
+                  href="/resume.pdf"
+                  download
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-medium shadow-md hover:shadow-lg transition-all"
+                >
+                  <Download className="w-5 h-5" />
+                  Download Resume
+                </a>
+              </div>
+
+              {/* Quick Contact */}
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm font-medium text-gray-700 mb-2">Quick Contact</p>
+                <div className="space-y-2">
+                  <a href="mailto:navyasreechoudhary@gmail.com" className="text-xs text-gray-600 hover:text-blue-600 block">
+                    📧 navyasreechoudhary@gmail.com
+                  </a>
+                  <a href="https://linkedin.com/in/navyasreeyellina" target="_blank" rel="noopener noreferrer" className="text-xs text-gray-600 hover:text-blue-600 block">
+                    💼 LinkedIn Profile
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       
       {/* Spacer for fixed header */}
       <div className="h-16 md:h-20" />
