@@ -113,6 +113,18 @@ html, body {
   }
 }
 
+/* Chat specific fixes */
+@supports (height: 100dvh) {
+  .chat-height {
+    height: 100dvh;
+  }
+}
+
+/* Ensure chat doesn't get cut off */
+.chat-container {
+  max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+}
+
 /* Blob animations */
 @keyframes blob {
   0% {
