@@ -101,6 +101,7 @@ html, body {
   input[type="email"],
   textarea {
     font-size: 16px !important;
+    color: #111827 !important; /* Ensure text is always dark */
   }
   
   /* Safe area support for notched devices */

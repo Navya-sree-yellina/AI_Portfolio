@@ -256,8 +256,8 @@ export default function AIAssistant() {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                     placeholder="Type your message..."
-                    className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-sm transition-colors"
-                    style={{ fontSize: '16px' }}
+                    className="flex-1 px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white text-gray-900 placeholder-gray-400 text-sm transition-colors"
+                    style={{ fontSize: '16px', color: '#111827' }}
                     disabled={isLoading}
                     autoComplete="off"
                   />
