@@ -1,8 +1,25 @@
 @import "tailwindcss";
 
 :root {
+  /* Base colors */
   --background: #ffffff;
   --foreground: #171717;
+
+  /* Enhanced color palette - Vibrant Tech Artistry */
+  --bg-dark: #0a0e27;          /* Deep space blue */
+  --bg-light: #f8fafc;         /* Clean white */
+  --accent-primary: #00d9ff;   /* Electric cyan */
+  --accent-secondary: #ff6b9d; /* Playful pink */
+  --accent-tertiary: #ffd700;  /* Golden yellow */
+  --accent-purple: #7b2ff7;    /* Vibrant purple */
+  --neutral-dark: #1e293b;     /* Slate */
+  --neutral-light: #cbd5e1;    /* Silver */
+
+  /* Gradients */
+  --gradient-hero: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-card: linear-gradient(to bottom right, #00d9ff, #7b2ff7);
+  --gradient-mesh: conic-gradient(from 180deg, #ff6b9d, #00d9ff, #ffd700);
+  --gradient-glow: radial-gradient(circle at center, #00d9ff 0%, transparent 70%);
 }
 
 @theme inline {
@@ -10,11 +27,21 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Custom color utilities */
+  --color-bg-dark: var(--bg-dark);
+  --color-bg-light: var(--bg-light);
+  --color-accent-primary: var(--accent-primary);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-accent-tertiary: var(--accent-tertiary);
+  --color-accent-purple: var(--accent-purple);
+  --color-neutral-dark: var(--neutral-dark);
+  --color-neutral-light: var(--neutral-light);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: var(--bg-dark);
     --foreground: #ededed;
   }
 }
@@ -126,6 +153,8 @@ html, body {
   max-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
 }
 
+/* Enhanced Animations for 3D Experience */
+
 /* Blob animations */
 @keyframes blob {
   0% {
@@ -142,14 +171,281 @@ html, body {
   }
 }
 
+/* Floating animation for 3D elements */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Rotate animation for orbiting elements */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Glow pulse effect */
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.5;
+    filter: blur(20px);
+  }
+  50% {
+    opacity: 1;
+    filter: blur(30px);
+  }
+}
+
+/* Gradient animation */
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+/* Particle float */
+@keyframes particle-float {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100vh) translateX(20px);
+    opacity: 0;
+  }
+}
+
+/* 3D Tilt on hover */
+@keyframes tilt-shake {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(2deg);
+  }
+  75% {
+    transform: rotate(-2deg);
+  }
+}
+
+/* Utility classes */
 .animate-blob {
   animation: blob 7s infinite;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-rotate {
+  animation: rotate 20s linear infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.animate-gradient {
+  animation: gradient-shift 8s ease infinite;
+  background-size: 200% 200%;
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite;
+}
+
+.animate-particle {
+  animation: particle-float 15s linear infinite;
+}
+
+.animation-delay-1000 {
+  animation-delay: 1s;
 }
 
 .animation-delay-2000 {
   animation-delay: 2s;
 }
 
+.animation-delay-3000 {
+  animation-delay: 3s;
+}
+
 .animation-delay-4000 {
   animation-delay: 4s;
+}
+
+/* 3D Transform utilities */
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.perspective-2000 {
+  perspective: 2000px;
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: var(--gradient-card);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hover glow effect */
+.hover-glow {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.hover-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: var(--gradient-card);
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+  filter: blur(10px);
+}
+
+.hover-glow:hover::before {
+  opacity: 0.7;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-blob,
+  .animate-float,
+  .animate-rotate,
+  .animate-glow-pulse,
+  .animate-gradient,
+  .animate-shimmer,
+  .animate-particle {
+    animation: none !important;
+  }
+}
+
+/* ==========================================
+   ACCESSIBILITY ENHANCEMENTS
+   ========================================== */
+
+/* Focus styles for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Remove default focus for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Skip to main content link */
+.skip-to-main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  padding: 1rem 2rem;
+  background: var(--accent-primary);
+  color: var(--bg-dark);
+  font-weight: 600;
+  transform: translateY(-100%);
+  transition: transform 0.2s;
+}
+
+.skip-to-main:focus {
+  transform: translateY(0);
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .glass,
+  .glass-dark {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid currentColor;
+  }
+
+  .gradient-text {
+    background: white;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  button, a {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }

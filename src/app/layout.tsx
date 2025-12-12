@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -6,16 +6,17 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+};
+
 export const metadata: Metadata = {
   title: "Navya Sree Yellina - Generative AI Engineer",
   description: "Hi! I'm Navya - I build AI that understands people. From RAG systems to privacy-preserving ML, I'm passionate about making technology work for everyone.",
   keywords: "Generative AI, MLOps, Machine Learning, AI Engineer, RAG, LangChain, Privacy-Preserving ML",
   authors: [{ name: "Navya Sree Yellina" }],
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
   icons: {
     icon: '/nsy-logo.png',
     shortcut: '/favicon.png',
@@ -49,9 +50,15 @@ export const metadata: Metadata = {
   },
 };
 
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
+import EnhancedHeader from '@/components/layout/EnhancedHeader';
+import EnhancedFooter from '@/components/layout/EnhancedFooter';
 import AIAssistant from '@/components/features/AIAssistant';
+import CustomCursor from '@/components/3d/CustomCursor';
+import PageLoader from '@/components/features/PageLoader';
+import SoundToggle from '@/components/features/SoundToggle';
+import EasterEggs from '@/components/features/EasterEggs';
+import KeyboardShortcuts from '@/components/features/KeyboardShortcuts';
+import { SoundProvider } from '@/contexts/SoundContext';
 
 export default function RootLayout({
   children,
@@ -59,14 +66,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} antialiased bg-gray-50 text-gray-900 min-h-screen`}>
-        <Header />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
-        <AIAssistant />
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <body className={`${inter.className} antialiased bg-[#0a0e27] text-gray-100 min-h-screen`} suppressHydrationWarning>
+        <SoundProvider>
+          {/* Skip to main content for keyboard users */}
+          <a href="#main-content" className="skip-to-main">
+            Skip to main content
+          </a>
+
+          <PageLoader />
+          <CustomCursor />
+          <EnhancedHeader />
+          <main id="main-content" className="min-h-screen">
+            {children}
+          </main>
+          <EnhancedFooter />
+          <AIAssistant />
+          <SoundToggle />
+          <KeyboardShortcuts />
+          <EasterEggs />
+        </SoundProvider>
         <Analytics />
         <SpeedInsights />
       </body>

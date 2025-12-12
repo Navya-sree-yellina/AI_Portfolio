@@ -125,19 +125,72 @@ export default function AIAssistant() {
 
   return (
     <>
-      {/* Chat Button - Fixed position */}
+      {/* Chat Button - Fixed position with enhanced animations */}
       {!isOpen && (
-        <motion.button
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 p-4 bg-blue-600 text-white rounded-full shadow-xl hover:bg-blue-700 transition-colors z-40"
-          aria-label="Open chat"
-        >
-          <MessageCircle className="w-6 h-6" />
-        </motion.button>
+        <div className="fixed bottom-6 right-6 z-40">
+          {/* Pulse rings */}
+          <motion.div
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600"
+            animate={{
+              scale: [1, 1.4, 1.4],
+              opacity: [0.7, 0, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: 'easeOut',
+            }}
+          />
+          <motion.div
+            className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-indigo-600"
+            animate={{
+              scale: [1, 1.4, 1.4],
+              opacity: [0.7, 0, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: 'easeOut',
+              delay: 1,
+            }}
+          />
+
+          {/* Main button */}
+          <motion.button
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setIsOpen(true)}
+            className="relative p-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-full shadow-2xl hover-glow"
+            aria-label="Open chat"
+          >
+            <motion.div
+              animate={{
+                rotate: [0, 5, -5, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: 'easeInOut',
+              }}
+            >
+              <MessageCircle className="w-6 h-6" />
+            </motion.div>
+
+            {/* Notification dot */}
+            <motion.div
+              className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white"
+              animate={{
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 1,
+                repeat: Infinity,
+              }}
+            />
+          </motion.button>
+        </div>
       )}
 
       {/* Chat Window */}
