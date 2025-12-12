@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
 interface SimpleCharacterProps {
-  state?: 'idle' | 'greeting' | 'thinking' | 'coding' | 'celebrating';
+  state?: 'idle' | 'greeting' | 'thinking' | 'coding' | 'celebrating' | 'floating';
   size?: number;
   className?: string;
 }
@@ -29,6 +29,7 @@ export default function SimpleCharacter({
       thinking: '🤔',
       coding: '💻',
       celebrating: '🎉',
+      floating: '🧘‍♀️',
     };
     setCurrentEmoji(emojiMap[state] || '🤖');
   }, [state]);
